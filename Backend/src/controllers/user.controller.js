@@ -7,7 +7,6 @@ import { User } from "../models/user.model.js";
 
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import { use } from "react";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
@@ -18,7 +17,7 @@ const generateAccessAndRefreshToken = async (userId) => {
     const refreshToken = await user.generateRefreshToken();
 
     user.refreshToken = refreshToken;
-    use.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
 
     return { accessToken, refreshToken };
   } catch (error) {
@@ -35,6 +34,8 @@ const option = {
 };
 
 const createUser = AsyncHandler(async (req, res) => {
+
+  console.log("babluuuuu: ", req.body)
   const { username, email, fullName, password } = req.body;
 
   if (
@@ -42,7 +43,7 @@ const createUser = AsyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "All Fields are required");
   }
-  const existUser = User.findOne({
+  const existUser = await User.findOne({
     $or: [{ username }, { email }],
   });
   if (existUser) {
@@ -84,7 +85,7 @@ const loginUser = AsyncHandler(async (req, res) => {
   });
   if (!user) throw new ApiError(400, "user does not exist!");
 
-  const isPasswordValidate = user.isPasswordCorrect(password);
+  const isPasswordValidate = await user.isPasswordCorrect(password);
   if (!isPasswordValidate) throw new ApiError(409, "Invalid user credentials");
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
@@ -108,6 +109,7 @@ const loginUser = AsyncHandler(async (req, res) => {
 
 
 const logOut = AsyncHandler(async (req, res)=>{
+  console.log(req.body._id)
     await User.findByIdAndUpdate(
         req.body._id,
         {
@@ -115,7 +117,7 @@ const logOut = AsyncHandler(async (req, res)=>{
                 refreshToken: 1
             }
         },{
-            new: true
+            returnDocument: 'after'
         });
         return res
         .status(200)
@@ -123,3 +125,5 @@ const logOut = AsyncHandler(async (req, res)=>{
         .clearCookie('refreshToken', option)
         .json(new ApiResponse(200,{},"User loggedOut successful"))
 })
+
+export {logOut, loginUser, createUser, generateAccessAndRefreshToken}
