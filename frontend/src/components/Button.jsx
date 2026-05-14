@@ -6,7 +6,7 @@ const Button = ({text = 'next', bgColor, onClick, disable = false, type = 'butto
         <button onClick={onClick}
         type={type}
         disabled={disable}
-        className={`${bgColor} cursor-pointer text-2xl min-w-[200px] h-[40px] rounded-full flex items-center justify-center gap-1 hover:shadow-md shadow-blue-900 hover:border-2 hover:border-white`}>
+        className={`cursor-pointer text-2xl h-[40px] rounded-full flex items-center justify-center gap-1 hover:shadow-md shadow-blue-900 hover:border-2 hover:border-white ${bgColor}`}>
             {text}
         </button>
       

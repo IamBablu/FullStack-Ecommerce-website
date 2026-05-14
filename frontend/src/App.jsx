@@ -1,10 +1,14 @@
 import React from 'react'
-import Signup from '../src/pages/Signup'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+import Signup from './pages/Signup'
+import Login from './pages/Login'
 const App = () => {
   return (
-    <div>
-      <Signup />
-    </div>
+    <Routes>
+      <Route path = '/signup' element = {<Signup />} />
+      <Route path = '/login' element = {<Login />} />
+        
+    </Routes>
   )
 }
 
