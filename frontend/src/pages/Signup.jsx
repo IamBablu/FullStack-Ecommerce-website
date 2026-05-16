@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { motion } from "motion/react"
+import { frameData, motion } from "motion/react"
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
 import Button from '../components/button';
 import Rolebox from '../components/Rolebox';
@@ -8,19 +8,27 @@ import { FaEyeSlash } from "react-icons/fa";
 import logo from '../assets/logo.jpeg'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { userDataContext } from '../context/UserContext';
 
 
 
 
 
 const Signup = () => {
+    const navigate = useNavigate();
+    const {userdata, setUserData, serverUrl} = React.useContext(userDataContext)
     // To go for registration page from choose role 
     const [confirmRole, setConfirmRole] = useState(false)
     const [error, setError] = useState("")
     const [showPassword, setShowPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [sentOtp, setSentOtp] = useState(false)
+    const [otpAttempt, setOtpAttempt] = useState(0)
+
 
     const [formData, setFormData] = useState({
         username: "",
+        otp: "",
         email: "",
         password: "",
         fullName: "",
@@ -32,7 +40,6 @@ const Signup = () => {
     console.log(formData.role)
     console.log(formData)
 
-    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setError("");
@@ -44,17 +51,39 @@ const Signup = () => {
         })
     }
 
+    const handleSendOtp = async(e)=> {
+        setLoading(true)
+        e.preventDefault()
+        try {
+            await axios.post(`${serverUrl}/users/send-otp`,{email: frameData.email}, {withCredentials: true} )
+            setOtpAttempt(1)
+            console.log("otp sent")
+            setSentOtp(true);
+            setLoading(false)
+
+        } catch (error) {
+            setError(error.message);
+            console.log(error)
+            setLoading(false)
+        }
+    }
+
+
     const handleSignup = async (e) => {
+        setLoading(true)
         e.preventDefault();
         console.log("Signup")
         try {
-            const user = await axios.post('http://127.0.0.1:8000/api/v1/users/signup', formData, { withCredentials: true })
-
-            console.log("Signup", user)
+            const result = await axios.post(`${serverUrl}/users/signup`, formData, { withCredentials: true })
+            setUserData(result.data);
+            navigate("/")
+            setLoading(true)
         } catch (error) {
+            setUserData(null)
             console.log(error)
+            setError(error.message)
+            setLoading(true)
         }
-        // navigate("/login");
     }
 
 
@@ -128,14 +157,25 @@ const Signup = () => {
             hover:[&::-webkit-scrollbar-thumb]:bg-blue-500
             active:[&::-webkit-scrollbar-thumb]:bg-blue-400">'>
                         <p className='text-lg '>Enter Your Full Name</p>
-                        <input type="text" name='fullName' onChange={handleChange} placeholder='Enter Your Name' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
+                        <input required type="text" name='fullName' onChange={handleChange} placeholder='Enter Your Name' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
                         <p className='text-lg '>Enter Your Username</p>
-                        <input type="text" name='username' onChange={handleChange} placeholder='Enter Your User Name' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
-                        <p className='text-lg '>Enter Your Email Id</p>
-                        <input type="email" name='email' onChange={handleChange} placeholder='Enter Your Email Id' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
+                        <input required type="text" name='username' onChange={handleChange} placeholder='Enter Your User Name' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
+                        <div className='relative'>
+                            <p className='text-lg '>Enter Your Email Id</p>
+                            <input required type="email" name='email' onChange={handleChange} placeholder='Enter Your Email Id' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
+                            < Button
+                                text={loading? 'sending...': (otpAttempt>0? "resend": "send")}
+                                bgColor="bg-green-600 w-[100px] absolute top-10 right-0 border-2 border-x-blue-500"
+                                onClick={handleSendOtp}
+                                disable={loading}/>
+                        </div>
+                        {sentOtp && <div>
+                        <p className='text-lg '>Enter Otp</p>
+                        <input required type="text" name='otp' onChange={handleChange} placeholder='Enter Your Otp' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
+                        </div>}
                         <p className='text-lg '>Enter Your Password</p>
                         <div className='relative'>
-                            <input type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
+                            <input required type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
                             {!showPassword ? (<FaEye className='text-xl absolute top-5 right-5 cursor-pointer' onClick={() => setShowPassword(true)} />) : (<FaEyeSlash className='text-xl absolute top-5 right-5 cursor-pointer' onClick={() => setShowPassword(false)} />)}
 
                         </div>
@@ -156,8 +196,9 @@ const Signup = () => {
                             </div>}
                     </div>
                     < Button type='submit'
-                        text={<span className='flex items-center justify-center gap-1 '>Register <TbPlayerTrackNextFilled className='mt-2' /></span>}
-                        bgColor="bg-green-600 w-[300px]" />
+                        text={loading? "Registering...." : <span className='flex items-center justify-center gap-1 '>Register <TbPlayerTrackNextFilled className='mt-2' /></span>}
+                        bgColor="bg-green-600 w-[300px]" 
+                        disable={loading}/>
                 </form>
                 <p className='cursor-pointer hover:underline' onClick={() => navigate("/login")}>Already have an account <span className='text-blue-500'>Login</span></p>
 
