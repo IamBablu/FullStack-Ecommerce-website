@@ -1,11 +1,11 @@
-
 import dotenv from 'dotenv'
 dotenv.config()
+
+
 import DBconnect from './src/db/index.js'
 import { app } from './app.js'
 const port = process.env.PORT
 const host = '127.0.0.1'
-
 
 
 DBconnect()

@@ -2,7 +2,7 @@ import { AsyncHandler } from "../utils/AsyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { uploadCloudinary } from "../utils/Cloudinary.js";
-import EmailTransporter from "../utils/EmailTransporter.js";
+import transporter from "../utils/EmailTransporter.js";
 
 import { User } from "../models/user.model.js";
 
@@ -32,6 +32,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 const option = {
   httpOnly: true,
   secure: true,
+  sameSite: "None"
 };
 const otpStore = {};
 
@@ -43,8 +44,8 @@ const sendOtp = AsyncHandler(async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const expiryAt = Date.now() + 5 * 60 * 1000;
   otpStore[email] = { otp, expiryAt };
-  const transporter = EmailTransporter();
-  transporter.sendmail({
+  // const transporter = transporter();
+  transporter.sendMail({
     from: `MyCart.com <${process.env.EMAIL_USER}>`,
     to: email,
     subject: "Your registration otp",
@@ -127,8 +128,8 @@ const createUser = AsyncHandler(async (req, res) => {
   }
   return res
     .status(200)
-    .cookie("accessToken", accessToken, option)
-    .cookie("refreshToken", refreshToken, option)
+    .cookie("accessToken", accessToken, {...option, maxAge: 24*60*60*1000})
+    .cookie("refreshToken", refreshToken, {...option, maxAge: 480*60*60*1000})
     .json(new ApiResponse(200, createdUser, "User register successfully"));
 });
 
@@ -304,6 +305,7 @@ const updateAvatar = AsyncHandler(async (req, res) => {
 
 const getCurrentUser = AsyncHandler(async (req, res) => {
   const user = await User.findById(req.user?._id).select("-password -refreshToken")
+  console.log(user)
   return res.status(200).json(new ApiResponse(200, user, "Returning userData"));
 });
 

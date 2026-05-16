@@ -55,7 +55,8 @@ const Signup = () => {
         setLoading(true)
         e.preventDefault()
         try {
-            await axios.post(`${serverUrl}/users/send-otp`,{email: frameData.email}, {withCredentials: true} )
+            console.log(formData.email)
+            await axios.post(`${serverUrl}/users/send-otp`,{email: formData.email}, {withCredentials: true} )
             setOtpAttempt(1)
             console.log("otp sent")
             setSentOtp(true);
