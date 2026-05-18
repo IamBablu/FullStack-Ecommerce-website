@@ -12,6 +12,9 @@ const userSchema = new Schema(
       trim: true,
       index: true,
     },
+    phone: {
+        type: Number
+    },
     fullName: {
         type: String,
         required: true

@@ -144,7 +144,7 @@ const Signup = () => {
                 {error && <p className='text-red-600'>{error}</p>}
                 <form className='flex flex-col gap-2' onSubmit={handleSignup}>
 
-                    <div className='h-[355px] overflow-y-auto /* 1. Set the width */
+                    <div className=' h-[355px] overflow-y-auto /* 1. Set the width */
             [&::-webkit-scrollbar]:w-1.5
             
             /* 2. Track (Background) - Keep it dark/subtle */
@@ -165,7 +165,7 @@ const Signup = () => {
                             <p className='text-lg '>Enter Your Email Id</p>
                             <input required type="email" name='email' onChange={handleChange} placeholder='Enter Your Email Id' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
                             < Button
-                                text={loading? 'sending...': (otpAttempt>0? "resend": "send")}
+                                text={loading? 'sending': (otpAttempt>0? "resend": "send")}
                                 bgColor="bg-green-600 w-[100px] absolute top-10 right-0 border-2 border-x-blue-500"
                                 onClick={handleSendOtp}
                                 disable={loading}/>

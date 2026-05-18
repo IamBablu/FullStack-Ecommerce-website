@@ -241,6 +241,7 @@ const updateUser = AsyncHandler(async (req, res) => {
     shopName,
     shopAddress,
     gstNumber,
+    phone
   } = req.body;
 
   if (!(loginKey && password)) throw new ApiError(402, "All fields required");
@@ -263,6 +264,7 @@ const updateUser = AsyncHandler(async (req, res) => {
   if (role == "User") {
     user.role = role;
     user.fullName = fullName;
+    user.phone= phone;
   } else {
     user.role = role;
     user.fullName = fullName;
