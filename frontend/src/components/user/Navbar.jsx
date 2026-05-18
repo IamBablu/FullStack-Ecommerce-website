@@ -19,6 +19,7 @@ const Navbar = ({ onLogout }) => {
     const [openProfile, setOpenProfile] = useState(false)
     const menuRef = useRef(null)
     const profileRef = useRef(null)
+    const logoRef = useRef(null)
     const navigate = useNavigate()
     const { userdata, setUserData } = React.useContext(userDataContext)
 
@@ -42,17 +43,22 @@ const Navbar = ({ onLogout }) => {
 
 
 
-    useEffect(() => {
+    useEffect((e) => {
         const handleClickOutside = (event) => {
+            // Check for Mobile Menu outside click
             if (openMenu && menuRef.current && !menuRef.current.contains(event.target)) {
                 setOpenMenu(false)
             }
-            if (openMenu && menuRef.current && !menuRef.current.contains(event.target)) {
+            // Check for Profile Modal outside click
+            if (openProfile && profileRef.current && !profileRef.current.contains(event.target) && !logoRef.current.contains(event.target) ) {
+                console.log("hiiii")
                 setOpenProfile(false)
             }
+            event.stopPropagation()
         };
-        document.addEventListener('mousedown', handleClickOutside)
+        
 
+        document.addEventListener('mousedown', handleClickOutside)
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
         }
@@ -74,9 +80,11 @@ const Navbar = ({ onLogout }) => {
     const handleSearch = () => {
         console.log("Searching....")
     }
-    const handleProfile = () => {
+    const handleProfile = (e) => {
         console.log("Profile section")
+        e.stopPropagation()
         setOpenProfile((pre) => !pre)
+        console.log("Profile section2")
     }
 
     const handleCart = () => {
@@ -101,14 +109,14 @@ const Navbar = ({ onLogout }) => {
             <div className='flex items-center justify-center gap-5'>
                 <Icon icon={<IoSearchSharp />} onClick={handleSearch} />
                 <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
-                <img ref={profileRef} src={logo} alt="profile" onClick={handleProfile} className='hidden md:block object-cover h-12 w-12 rounded-full border-2 border-blue-600 cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
+                <img ref={logoRef} src={logo} alt="profile" onClick={handleProfile} className='hidden md:block object-cover h-12 w-12 rounded-full border-2 border-blue-600 cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
                 <Icon icon={<BsCartCheckFill onClick={handleCart} />} />
                 <Icon icon={openMenu ? <ImCross /> : <GiHamburgerMenu />} css='md:hidden' onClick={() => setOpenMenu((pre) => !pre)} />
 
             </div>
             {openMenu && <div ref={menuRef} className='md:hidden absolute top-20 right-0 flex flex-col gap-2 h-[calc(100vh-5rem)] bg-gray-600/60 px-4 z-10'>
 
-                <div
+                <div ref={logoRef}
                     className='bg-gray-500 p-1 px-3 rounded-full cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500 flex items-center py-4 h-18'
                     onClick={handleProfile}>
                     <img src={logo} alt="profile" className='object-cover h-16 w-16 rounded-full border-2 border-blue-600 cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
