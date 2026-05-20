@@ -3,6 +3,8 @@ import image1 from '../../assets/image1.jpg'
 import image2 from '../../assets/image2.webp'
 import image3 from '../../assets/image3.webp'
 import { motion, AnimatePresence } from 'motion/react'
+import { IoCaretBack } from "react-icons/io5";
+import { IoCaretForwardOutline } from "react-icons/io5";
 
 
 const Dashboard = () => {
@@ -63,14 +65,14 @@ const Dashboard = () => {
 
 
   return (
-    <div className='h-screen w-screen text-white pt-20'>
+    <div className='w-screen text-white pt-20'>
       <AnimatePresence mode="popLayout">
         <motion.div key={currentIndex} 
         initial={{ opacity: 0, x: '100%' }} 
         animate={{ opacity: 1, x: 0 }}
         exit={{opacity: 0, x: '-100%'}}
         transition={{ type: "spring", stiffness: 200, damping: 28}} 
-        className='md:h-full h-80 w-full relative overflow-hidden'>
+        className='md:h-[90vh] h-80 w-full relative overflow-hidden'>
 
         <img src={currentSlide.image} alt="sides" className='object-cover h-full w-full'/>
 
@@ -80,15 +82,19 @@ const Dashboard = () => {
           <h1 className='text-sm md:text-lg '>{currentSlide.subtitle}</h1>
           <button className='bg-blue-800 p-3 px-5 rounded-full shadow-lg hover:shadow-blue-600 hover:border-2 hover:border-white cursor-pointer'>{currentSlide.button}</button>
         </div>
-
+        <div className='absolute bottom-10 right-10 flex gap-3'>
+          <img src={image1} alt="slide1" className='h-20 w-30 object-cover border-white border-2 rounded-3xl shadow-lg hover:shadow-blue-600 hover:border-4 cursor-pointer' onClick={() => setCurrentIndex(0)}/>
+          <img src={image2} alt="slide2" className='h-20 w-30 object-cover border-white border-2 rounded-3xl shadow-lg hover:shadow-blue-600 hover:border-4 cursor-pointer' onClick={() => setCurrentIndex(1)}/>
+          <img src={image3} alt="slide3" className='h-20 w-30 object-cover border-white border-2 rounded-3xl shadow-lg hover:shadow-blue-600 hover:border-4 cursor-pointer' onClick={() => setCurrentIndex(2)}/>
+        </div>
         </motion.div>
 
-        <motion.div key={currenCategoryIndex+5}
-        initial={{ opacity: 0, x: '100%' }} 
-        animate={{ opacity: 1, x: 0 }}
+        <motion.div key={currenCategoryIndex+5} 
+        initial={{ opacity: 0, x: '100%'}} 
+        animate={{ opacity: 1, x: 0}}
         exit={{opacity: 0, x: '-100%'}}
         transition={{ type: "spring", stiffness: 200, damping: 28}}
-         className=' h-100 w-screen flex justify-center gap-3 md:gap-6 '>
+         className='pl-8 pt-2 h-44 w-screen flex justify-around md:gap-6 relative'>
           { currentCategory.map((item, index) =>
           <button key={index} className='hidden md:block bg-gray-800 h-40 w-60 border-3 hover:border-4 border-blue-500 hover:border-blue-700 cursor-pointer rounded-3xl shadow-xl hover:shadow-blue-600'>
             <p className='text-5xl'>{item.icon}</p>
@@ -96,12 +102,20 @@ const Dashboard = () => {
           </button>
           )}
           { currentCategorySm.map((item, index) =>
-          <button key={index} className='md:hidden bg-gray-800 h-30 w-40 border-3 hover:border-4 border-blue-500 hover:border-blue-700 cursor-pointer rounded-3xl shadow-xl hover:shadow-blue-600'>
+          <button key={index} className='md:hidden bg-gray-800 h-30 w-[25%] border-3 hover:border-4 border-blue-500 hover:border-blue-700 cursor-pointer rounded-3xl shadow-xl hover:shadow-blue-600'>
             <p className='text-4xl'>{item.icon}</p>
             <p>{item.label}</p>
           </button>
           )}
 
+          <div>
+            <IoCaretForwardOutline className='absolute top-10 md:top-16 right-5 text-4xl text-white bg-gray-800 rounded-full cursor-pointer hover:scale-110'
+             onClick={()=> {setCurrentCategoryIndex(pre => pre === 0 ? 5 : 0);
+                          setCurrentCategoryIndexSm(pre => (pre +3) % 9)}}/>
+            <IoCaretBack className='absolute top-10 md:top-16 left-5 text-4xl text-white bg-gray-800 rounded-full cursor-pointer hover:scale-110' 
+            onClick={()=> {setCurrentCategoryIndex(pre => pre === 0 ? 5 : 0);
+                          setCurrentCategoryIndexSm(pre =>pre != 0? ((pre -3) % 9): 6 )}}/>
+          </div>
           
         </motion.div>
       </AnimatePresence>

@@ -1,20 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import logo from '../../assets/logo.jpeg'
-import { div, span } from 'motion/react-client'
 import { IoSearchSharp } from "react-icons/io5";
 import { RiCustomerServiceFill } from "react-icons/ri";
 import { BsCartCheckFill } from "react-icons/bs";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
 import { MdAddPhotoAlternate } from "react-icons/md";
+import axios from 'axios';
 
 import { useFetcher, useNavigate } from 'react-router-dom';
 import { userDataContext } from '../../context/UserContext'
 
 
 
-const Navbar = ({ onLogout }) => {
+
+const Navbar = () => {
     const [openMenu, setOpenMenu] = useState(false)
     const [openProfile, setOpenProfile] = useState(false)
     const menuRef = useRef(null)
@@ -43,7 +44,7 @@ const Navbar = ({ onLogout }) => {
 
 
 
-    useEffect((e) => {
+    useEffect(() => {
         const handleClickOutside = (event) => {
             // Check for Mobile Menu outside click
             if (openMenu && menuRef.current && !menuRef.current.contains(event.target)) {
@@ -81,6 +82,7 @@ const Navbar = ({ onLogout }) => {
         console.log("Searching....")
     }
     const handleProfile = (e) => {
+        if(!userdata) navigate('/login')
         console.log("Profile section")
         e.stopPropagation()
         setOpenProfile((pre) => !pre)
@@ -90,6 +92,17 @@ const Navbar = ({ onLogout }) => {
     const handleCart = () => {
         console.log("Cart section")
     }
+    const handleLogOut = async () => {
+    try {
+        console.log("clicked...")
+        await axios.get('http://127.0.0.1:8000/api/v1/users/signout',{withCredentials: true})
+        console.log("clicked...1")
+    setUserData(null)
+    navigate("/login")
+    } catch (error) {
+      console.log(error)
+    }
+}
     return (
         <motion.div key='nav'
             initial={{ x: 400, opacity: 0, scale: 0 }}
@@ -125,9 +138,9 @@ const Navbar = ({ onLogout }) => {
                 <Button text='Categories' onClick={handleCategories} css='text-3xl py-4 font-semibold text-start px-10' />
                 <Button text='Shop' onClick={handleShop} css='text-3xl py-4 font-semibold text-start px-10' />
                 <Button text='Orders' onClick={handleOrders} css='text-3xl py-4 font-semibold text-start px-10' />
-                <Button text={userdata ? 'LogOut' : 'Login'} onClick={() => userdata ? onLogout : navigate('/login')} css='text-3xl py-4 font-semibold text-start px-10' />
+                <Button text={userdata ? 'LogOut' : 'Login'} onClick={() => userdata ? handleLogOut : navigate('/login')} css='text-3xl py-4 font-semibold text-start px-10' />
             </div>}
-            {openProfile && <motion.div ref={profileRef} key='modal'
+            {userdata && openProfile && <motion.div ref={profileRef} key='modal'
                 initial={{ scale: 0, opacity: 0, y: -400 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0, opacity: 0, x: 400 }}
@@ -159,6 +172,7 @@ const Navbar = ({ onLogout }) => {
                     <input type="text" name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
                 </div>
                 <Button text='Update Details' css='h-10 bg-green-700 transition-transform duration-150 active:scale-95 hover:scale-105' onClick={handleUpdate} />
+                <Button text='Logout' css='h-10 bg-green-700 transition-transform duration-150 active:scale-95 hover:scale-105' onClick={handleLogOut} />
 
             </motion.div>}
         </motion.div>
