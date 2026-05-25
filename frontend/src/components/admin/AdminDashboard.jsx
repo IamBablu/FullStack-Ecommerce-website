@@ -1,19 +1,51 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from './Sidebar'
 import UserOrders from './UserOrders'
 import VendorApproval from './VendorApproval'
 import VendorDetails from './VendorDetails'
 import ProductRequest from './ProductRequest'
-import { div } from 'motion/react-client'
+import { userDataContext } from '../../context/UserContext'
+import axios from 'axios'
+
 
 
   
 
-const AdminDashboard = () => {
-  const [activePage, setActivePage] = useState('dashboard')
+const AdminDashboard = ({activePageAdmin, setActivePageAdmin}) => {
+  const {serverUrl, vendors, setVendors, products, setProducts} = React.useContext(userDataContext) 
+
+
+ const getVendors = async()=> {
+     try {
+       const result = await axios.get(`${serverUrl}/admin/get-vendors`, {withCredentials: true})
+      
+       setVendors(result.data.data)
+     } catch (error) {
+       setVendors(null)
+       console.error(error)
+     }
+   }
+
+ const getProducts = async()=> {
+     try {
+       const result = await axios.get(`${serverUrl}/admin/get-products`, {withCredentials: true})
+       setProducts(result.data.data)
+     } catch (error) {
+       setProducts(null)
+       console.error(error)
+     }
+   }
+   
+
+  useEffect(()=>{
+    getVendors();
+    getProducts();
+  },[])
+
+
 
   const renderPage = ()=> {
-    switch (activePage) {
+    switch (activePageAdmin) {
       case 'vendors': return <VendorDetails />
       case 'orders': return <UserOrders />
       case 'vendor-approval': return <VendorApproval />
@@ -25,15 +57,15 @@ const AdminDashboard = () => {
 
   return (
     <div className='flex justify-end h-screen w-screen pt-20'>
-      <Sidebar activePage={activePage} setActivePage={setActivePage}/>
-      <div className='bg-red-500 w-[80%]'>
+        <Sidebar activePageAdmin={activePageAdmin} setActivePageAdmin={setActivePageAdmin} css='hidden md:block'/>
+      <div className='md:w-[80%]'>
       {renderPage()}
       </div>
     </div>
   )
 }
 
-const Dashboard = () =>{
+export const Dashboard = () =>{
   return <div>
     Admin Dashboard
   </div>

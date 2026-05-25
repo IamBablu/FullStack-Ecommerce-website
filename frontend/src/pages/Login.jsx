@@ -42,7 +42,7 @@ const Login = () => {
             setLoading(false)
         } catch (error) {
             setUserData(null)
-            console.log(error)
+            console.error(error)
             setError(error.message)
             setLoading(false)
         }

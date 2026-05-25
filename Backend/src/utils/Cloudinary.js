@@ -4,7 +4,7 @@ import fs from 'fs'
 cloudinary.config({
     cloud_name : process.env.CLOUDINARY_CLOUD_NAME,
     api_key : process.env.CLOUDINARY_API_KEY,
-    secrete_key : process.env.CLOUDINARY_API_SECRETE
+    api_secret : process.env.CLOUDINARY_API_SECRETE,
 })
 
 
@@ -12,12 +12,17 @@ const uploadCloudinary = async (localPath) => {
     try {
         if (!localPath) return null
         const response = await cloudinary.uploader.upload(localPath,{
-            resource_type : 'auto'
+            resource_type : 'image'
         })
-        fs.unlinkSync(localPath)
+        if(fs.existsSync(localPath)){
+            fs.unlinkSync(localPath)
+        }
         return response
     } catch (error) {
-        fs.unlinkSync(localPath)
+        console.error(error)
+        if(fs.existsSync(localPath)){
+            fs.unlinkSync(localPath)
+        }
         return null
     }
 }

@@ -17,18 +17,15 @@ import { userDataContext } from '../../context/UserContext'
 
 const VendorNavbar = () => {
     const navigate = useNavigate()
-    const { serverUrl, userdata, setUserData } = React.useContext(userDataContext)
-
+    const { serverUrl, userdata, setUserData} = React.useContext(userDataContext)
 
     const handleLogOut = async () => {
         try {
-            console.log("clicked...")
             await axios.get('http://127.0.0.1:8000/api/v1/users/signout', { withCredentials: true })
-            console.log("clicked...1")
             setUserData(null)
             navigate("/login")
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
     return (

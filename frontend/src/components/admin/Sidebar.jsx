@@ -6,7 +6,7 @@ import { FaShoppingBag } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaBox } from "react-icons/fa";
 
-const Sidebar = ({ activePage, setActivePage }) => {
+const Sidebar = ({ activePageAdmin, setActivePageAdmin, css='', setOpenMenu }) => {
 
   const menu = [
     { id: "dashboard", label: "Dashboard", icon: <MdDashboard size={22}/> },
@@ -18,11 +18,11 @@ const Sidebar = ({ activePage, setActivePage }) => {
 
 
   return (
-    <div className='bg-gray-900 w-[20%] pl-5 pt-3'>
+    <div className={`bg-gray-900 w-[20%] pl-5 pt-3 ${css}`}>
       <h1 className='text-2xl'>Admin Panel</h1>
       {
         menu.map((item, index)=>{
-          return <Button key={index} onclick={()=>setActivePage(item.id)} css={activePage == item.id? 'bg-blue-900 hover:bg-blue-800': 'bg-gray-700 hover:bg-gray-800'}>
+          return <Button key={index} onclick={()=>{setOpenMenu? setOpenMenu(false): ""; setActivePageAdmin(item.id)}} css={activePageAdmin == item.id? 'bg-blue-900 hover:bg-blue-800': 'bg-gray-700 hover:bg-gray-800'}>
             {item.icon}
             <span>{item.label}</span>
           </Button>

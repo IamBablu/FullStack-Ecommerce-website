@@ -60,8 +60,8 @@ const userSchema = new Schema(
     },
     verificationStatus: {
         type : String,
-        enum: ["pending", "approved", "rejected"],
-        default: "pending"
+        enum: ["Pending", "Approved", "Rejected"],
+        default: "Pending"
     },
     requestedAt: {
         type: Date
@@ -103,7 +103,6 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-    console.log(this.password, password)
     return await bcrypt.compare(password, this.password)
     
 }

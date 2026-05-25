@@ -14,7 +14,6 @@ import { verifyJwt } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import otpLimiter from "../utils/OtpLimiter.js";
 const routes = Router();
-console.log("routes");
 
 
 routes.route("/send-otp").post(otpLimiter,sendOtp);

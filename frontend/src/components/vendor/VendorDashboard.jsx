@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Sidebar from './Sidebar'
 import Orders from './Orders'
 import Products from './Products'
+import { userDataContext } from '../../context/UserContext'
+import axios from 'axios'
 
 
   
 
 const VendorDashboard = () => {
+  const {serverUrl, userdata, setUserData, products, setProducts} = useContext(userDataContext)
   const [activePage, setActivePage] = useState('dashboard')
 
   const renderPage = ()=> {
@@ -17,11 +20,25 @@ const VendorDashboard = () => {
     }
   }
 
+  const getProducts = async() =>{
+    try {
+      const result = await axios.get(`${serverUrl}/product/get-my-product`,{withCredentials: true})
+      setProducts(result.data.data)
+    } catch (error) {
+      console.error(error)
+      setProducts(null)
+    }
+  }
+
+  useEffect(()=>{
+    getProducts();
+  },[]);
+
 
   return (
     <div className='flex justify-end h-screen w-screen pt-20'>
       <Sidebar activePage={activePage} setActivePage={setActivePage}/>
-      <div className='bg-red-500 w-[80%]'>
+      <div className='w-[80%]'>
       {renderPage()}
       </div>
     </div>

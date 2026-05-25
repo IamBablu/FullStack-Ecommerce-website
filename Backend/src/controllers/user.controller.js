@@ -56,7 +56,6 @@ const sendOtp = AsyncHandler(async (req, res) => {
 });
 
 const createUser = AsyncHandler(async (req, res) => {
-  console.log("babluuuuu: ", req.body);
   const {
     username,
     email,
@@ -114,6 +113,7 @@ const createUser = AsyncHandler(async (req, res) => {
     shopName,
     shopAddress,
     gstNumber,
+    requestedAt : new Date()
   });
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
@@ -135,7 +135,6 @@ const createUser = AsyncHandler(async (req, res) => {
 
 const loginUser = AsyncHandler(async (req, res) => {
   let { username, email, password, loginKey } = req.body;
-  console.log(username, email, password, loginKey);
 
   if (!(username || email || loginKey)) {
     throw new ApiError(402, "username or email is required");
@@ -146,14 +145,11 @@ const loginUser = AsyncHandler(async (req, res) => {
       email = loginKey;
     } else username = loginKey;
   }
-  console.log(username, email);
   const user = await User.findOne({
     $or: [{ username: username }, { email: email }],
   });
   if (!user) throw new ApiError(400, "user does not exist!");
-  console.log(user);
   const isPasswordValidate = await user.isPasswordCorrect(password);
-  console.log(isPasswordValidate);
   if (!isPasswordValidate) throw new ApiError(409, "Invalid user credentials");
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
@@ -181,7 +177,6 @@ const loginUser = AsyncHandler(async (req, res) => {
 });
 
 const logOut = AsyncHandler(async (req, res) => {
-  console.log(req.user._id);
   await User.findByIdAndUpdate(
     req.user._id,
     {
@@ -261,16 +256,18 @@ const updateUser = AsyncHandler(async (req, res) => {
   const isPasswordValidate = await user.isPasswordCorrect(password);
   if (!isPasswordValidate) throw new ApiError(409, "Password is incorrect");
 
-  if (role == "User") {
-    user.role = role;
+  if (role == "User" || role == "Admin") {
     user.fullName = fullName;
     user.phone= phone;
   } else {
-    user.role = role;
+    user.phone = phone
     user.fullName = fullName;
     user.shopName = shopName;
     user.shopAddress = shopAddress;
     user.gstNumber = gstNumber;
+    user.requestedAt = new Date();
+    user.verificationStatus = 'Pending';
+    user.rejectedReason = '';
   }
 
   await user.save({ validateBeforeSave: false });
@@ -284,9 +281,8 @@ const updateUser = AsyncHandler(async (req, res) => {
 });
 
 const updateAvatar = AsyncHandler(async (req, res) => {
-  const avatarLocalPath = req.files?.avatar[0].path;
+  const avatarLocalPath = req.file?.path;
   if (!avatarLocalPath) throw new ApiError(409, "Avatar not found");
-
   const avatar = await uploadCloudinary(avatarLocalPath);
   if (!avatar)
     throw new ApiError(
@@ -307,7 +303,6 @@ const updateAvatar = AsyncHandler(async (req, res) => {
 
 const getCurrentUser = AsyncHandler(async (req, res) => {
   const user = await User.findById(req.user?._id).select("-password -refreshToken")
-  console.log(user)
   return res.status(200).json(new ApiResponse(200, user, "Returning userData"));
 });
 

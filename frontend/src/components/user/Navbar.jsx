@@ -52,7 +52,7 @@ const Navbar = () => {
             }
             // Check for Profile Modal outside click
             if (openProfile && profileRef.current && !profileRef.current.contains(event.target) && !logoRef.current.contains(event.target) ) {
-                console.log("hiiii")
+               
                 setOpenProfile(false)
             }
             event.stopPropagation()
