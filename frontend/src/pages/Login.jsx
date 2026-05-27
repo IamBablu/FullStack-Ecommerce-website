@@ -40,6 +40,7 @@ const Login = () => {
             setUserData(result.data)
             navigate('/')
             setLoading(false)
+            window.location.reload();
         } catch (error) {
             setUserData(null)
             console.error(error)

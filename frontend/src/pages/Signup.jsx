@@ -16,7 +16,7 @@ import { userDataContext } from '../context/UserContext';
 
 const Signup = () => {
     const navigate = useNavigate();
-    const {userdata, setUserData, serverUrl} = React.useContext(userDataContext)
+    const { userdata, setUserData, serverUrl } = React.useContext(userDataContext)
     // To go for registration page from choose role 
     const [confirmRole, setConfirmRole] = useState(false)
     const [error, setError] = useState("")
@@ -51,11 +51,11 @@ const Signup = () => {
         })
     }
 
-    const handleSendOtp = async(e)=> {
+    const handleSendOtp = async (e) => {
         setOtpSending(true)
         e.preventDefault()
         try {
-            await axios.post(`${serverUrl}/users/send-otp`,{email: formData.email}, {withCredentials: true} )
+            await axios.post(`${serverUrl}/users/send-otp`, { email: formData.email }, { withCredentials: true })
             setOtpAttempt(1)
             setSentOtp(true);
             setOtpSending(false)
@@ -76,6 +76,7 @@ const Signup = () => {
             setUserData(result.data);
             navigate("/")
             setLoading(true)
+            window.location.reload();
         } catch (error) {
             setUserData(null)
             console.error(error)
@@ -162,14 +163,14 @@ const Signup = () => {
                             <p className='text-lg '>Enter Your Email Id</p>
                             <input required type="email" name='email' onChange={handleChange} placeholder='Enter Your Email Id' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
                             < Button
-                                text={otpSending? 'sending': (otpAttempt>0? "resend": "send")}
+                                text={otpSending ? 'sending' : (otpAttempt > 0 ? "resend" : "send")}
                                 bgColor="bg-green-600 w-[100px] absolute top-8 right-0 border-2 border-x-blue-500"
                                 onClick={handleSendOtp}
-                                disable={loading}/>
+                                disable={loading} />
                         </div>
                         {sentOtp && <div>
-                        <p className='text-lg '>Enter Otp</p>
-                        <input required type="text" name='otp' onChange={handleChange} placeholder='Enter Your Otp' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                            <p className='text-lg '>Enter Otp</p>
+                            <input required type="text" name='otp' onChange={handleChange} placeholder='Enter Your Otp' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
                         </div>}
                         <p className='text-lg '>Enter Your Password</p>
                         <div className='relative'>
@@ -194,9 +195,9 @@ const Signup = () => {
                             </div>}
                     </div>
                     < Button type='submit'
-                        text={loading? "Registering...." : <span className='flex items-center justify-center gap-1 '>Register <TbPlayerTrackNextFilled className='mt-2' /></span>}
-                        bgColor="bg-green-600 w-full" 
-                        disable={loading}/>
+                        text={loading ? "Registering...." : <span className='flex items-center justify-center gap-1 '>Register <TbPlayerTrackNextFilled className='mt-2' /></span>}
+                        bgColor="bg-green-600 w-full"
+                        disable={loading} />
                 </form>
                 <p className='cursor-pointer hover:underline' onClick={() => navigate("/login")}>Already have an account <span className='text-blue-500'>Login</span></p>
 

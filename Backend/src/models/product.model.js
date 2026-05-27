@@ -80,7 +80,7 @@ const productSchema = new Schema({
         type: Boolean,
         default: false
     },
-    detailsPoints: {
+    detailPoints: {
         type: [String],
         default: []
     },

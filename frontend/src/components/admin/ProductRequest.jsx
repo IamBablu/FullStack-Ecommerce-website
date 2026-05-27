@@ -1,18 +1,56 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import logo from '../../assets/image1.jpg'
 import { userDataContext } from '../../context/UserContext'
+import axios from 'axios'
 
 const ProductRequest = () => {
   const {serverUrl, userdata, setUserData, products, setProducts, vendors, setVendors} = useContext(userDataContext)
   const [selectedProduct, setSelectedProduct] = useState('') 
   const [rejected, setRejected] = useState(false)
+  const [reason, setReason] = useState("")
   const [vendorDetails, setVendorDetails] = useState(false)
+  const [loading, setLoading] = useState(false)
+
 
   const getShopDetails = (vendorId) => {
     const main1 = vendors.filter((v) => v._id == vendorId)
     setVendorDetails(main1[0]);
   }
 
+
+  const handleVerify = async (newStatus) => {
+    try {
+      setLoading(true)
+      const result = await axios.patch(`${serverUrl}/admin/verify-product`, { status: newStatus, productId: selectedProduct._id, rejectedReason: reason }, { withCredentials: true })
+      console.log(newStatus)
+      console.log(result.data.data);
+      setProducts(products.map((pro) => pro._id === result.data.data?._id? result.data.data: pro))
+      setLoading(false)
+      setSelectedProduct(null)
+      setRejected(false)
+    } catch (error) {
+      console.error(error)
+      setLoading(false)
+      setSelectedProduct(null)
+      setRejected(false)
+    }
+  }
+
+  useEffect(() => {
+      if (products.length > 0) {
+        const isAlreadySorted = products.every((prod, i, arr) =>
+          i === 0 || new Date(arr[i - 1].requestedAt) >= new Date(prod.requestedAt)
+        );
+        if (!isAlreadySorted) {
+          const newestFirst = [...products].sort((a, b) => {
+            return new Date(b.requestedAt) - new Date(a.requestedAt);
+          });
+  
+          setProducts(newestFirst); // Ab yeh sahi jagah par hai (.sort ke bahar)
+        }
+      }
+  
+    }, [products, setProducts])
   return (
     <div className='bg-gray-200 h-full w-full pt-5 pl-5 relative'>
       <div className='bg-gray-800 h-[95%] w-[95%] rounded-4xl overflow-y-scroll [&::-webkit-scrollbar]:w-0 px-10 py-4'>
@@ -85,17 +123,18 @@ const ProductRequest = () => {
               <p>{selectedProduct.category}</p>
             </div>
           </div>
+          <p><span className='text-xl'>Description:</span> <br /> <span className='ml-20'>{selectedProduct.description}</span></p>
           <div className='flex justify-around'>
-            <button className='bg-green-500 p-2 w-32 rounded-4xl hover:scale-110 active:scale-90 cursor-pointer transition'>Approve</button>
+            <button className='bg-green-500 p-2 w-32 rounded-4xl hover:scale-110 active:scale-90 cursor-pointer transition' onClick={()=> handleVerify("Approved")}>Approve</button>
             <button className='bg-red-500 p-2 w-32 rounded-4xl hover:scale-110 active:scale-90 cursor-pointer transition' onClick={() => setRejected(true)}>Reject</button>
             <button className='bg-blue-500 p-2 w-32 rounded-4xl hover:scale-110 active:scale-90 cursor-pointer transition' onClick={() => getShopDetails(selectedProduct.vendor)}>Shop Details</button>
             <button className='bg-gray-200 p-2 w-32 rounded-4xl hover:scale-110 active:scale-90 cursor-pointer transition text-black' onClick={() => setSelectedProduct('')}>Cancel</button>
           </div>
           {rejected && <div className='flex flex-col items-center gap-2'>
-            <textarea name="" id="" rows={3} className='w-full border-4 outline-none bg-white border-blue-500 rounded-xl p-2 text-black' placeholder='Enter Rejection Reason' maxLength={100}></textarea>
+            <textarea name="" id="" rows={3} value={reason} className='w-full border-4 outline-none bg-white border-blue-500 rounded-xl p-2 text-black' placeholder='Enter Rejection Reason' maxLength={100} onChange={(e)=> setReason(e.target.value)}></textarea>
             <p className='text-sm'>30/100</p>
             <div>
-              <button className='bg-red-500 p-2 w-32 rounded-4xl hover:scale-110 active:scale-90 cursor-pointer transition mr-10'> Rejected </button>
+              <button className='bg-red-500 p-2 w-32 rounded-4xl hover:scale-110 active:scale-90 cursor-pointer transition mr-10' onClick={()=> handleVerify("Rejected")}> Rejected </button>
               <button className='bg-gray-200 p-2 w-32 rounded-4xl hover:scale-110 active:scale-90 cursor-pointer transition text-black' onClick={() => setRejected(false)}> Cancel </button>
             </div>
           </div>}
