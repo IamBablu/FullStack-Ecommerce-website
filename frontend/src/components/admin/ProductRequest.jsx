@@ -1,15 +1,18 @@
 import React, { useContext, useState, useEffect } from 'react'
-import logo from '../../assets/image1.jpg'
 import { userDataContext } from '../../context/UserContext'
 import axios from 'axios'
+import ApprovedProduct from './ApprovedProduct'
+import RejectedProduct from './RejectedProduct'
 
 const ProductRequest = () => {
   const {serverUrl, userdata, setUserData, products, setProducts, vendors, setVendors} = useContext(userDataContext)
   const [selectedProduct, setSelectedProduct] = useState('') 
   const [rejected, setRejected] = useState(false)
   const [reason, setReason] = useState("")
-  const [vendorDetails, setVendorDetails] = useState(false)
+  const [vendorDetails, setVendorDetails] = useState("")
   const [loading, setLoading] = useState(false)
+
+  const [activePage, setActivePage] = useState("Pending")
 
 
   const getShopDetails = (vendorId) => {
@@ -52,9 +55,16 @@ const ProductRequest = () => {
   
     }, [products, setProducts])
   return (
-    <div className='bg-gray-200 h-full w-full pt-5 pl-5 relative'>
+    <div className='bg-gray-200 h-full w-full pl-5 relative'>
+    <div className='bg-gray-600 w-[95%] h-8 rounded-full flex justify-center gap-10'>
+      <button className={`${activePage == 'Pending'? "bg-gray-800":"bg-gray-400"} px-5 rounded-full hover:scale-110 active:scale-90 transition cursor-pointer`} onClick={()=> setActivePage("Pending")}>Pending</button>
+      <button className={`${activePage == 'Approved'? "bg-gray-800":"bg-gray-400"} px-5 rounded-full hover:scale-110 active:scale-90 transition cursor-pointer`} onClick={()=> setActivePage("Approved")}>Approved</button>
+      <button className={`${activePage == 'Rejected'? "bg-gray-800":"bg-gray-400"} px-5 rounded-full hover:scale-110 active:scale-90 transition cursor-pointer`} onClick={()=> setActivePage("Rejected")}>Rejected</button>
+      
+    </div>
+    {activePage == "Pending" &&
       <div className='bg-gray-800 h-[95%] w-[95%] rounded-4xl overflow-y-scroll [&::-webkit-scrollbar]:w-0 px-10 py-4'>
-        <h1 className='text-4xl font-semibold mb-5'>Product Approval Requests</h1>
+        <h1 className='text-4xl font-semibold mb-5 text-yellow-500'>Product Approval Requests</h1>
         <table className='w-full table-fixed'>
           <thead className='bg-gray-500 text-2xl'>
             <tr >
@@ -78,27 +88,14 @@ const ProductRequest = () => {
               <td className='wrap-break-word pr-4' onClick={() => setSelectedProduct(product)}><span className='bg-green-700 p-2 md:px-4 rounded-full hover:bg-green-900 transition-all duration-300 cursor-pointer'>Check Details</span></td>
             </tr>
             }})}
-            <tr className='border-t-2 text-center'>
-              <td className='pl-4 py-1'><img src={logo} className='h-20 w-20 rounded-lg object-cover' alt="" /></td>
-              <td>new shoes className='text-center'</td>
-              <td>199</td>
-              <td><span className='bg-yellow-300/50 p-2 px-4 rounded-full'>pending</span></td>
-              <td className=''>Sport outdor</td>
-              <td className='wrap-break-word pr-4'><span className='bg-green-700 p-2 md:px-4 rounded-full hover:bg-green-900 transition-all duration-300 cursor-pointer'>Check Details</span></td>
-            </tr>
-            <tr className='border-t-2 text-center'>
-              <td className='pl-4 py-1'><img src={logo} className='h-20 w-20 rounded-lg object-cover' alt="" /></td>
-              <td>new shoes className='text-center'</td>
-              <td>199</td>
-              <td><span className='bg-yellow-300/50 p-2 px-4 rounded-full'>pending</span></td>
-              <td className=''>Sport outdor</td>
-              <td className='wrap-break-word pr-4'><span className='bg-green-700 p-2 md:px-4 rounded-full hover:bg-green-900 transition-all duration-300 cursor-pointer'>Check Details</span></td>
-            </tr>
 
 
           </tbody>
         </table>
       </div>
+      }
+      {activePage == "Approved" && <ApprovedProduct />}
+      {activePage == "Rejected" && <RejectedProduct />}
       {selectedProduct && <div className='w-full h-full bg-gray-600/60 absolute top-0 left-0 z-10 flex justify-center items-center'>
         <div className='bg-black w-[60%] rounded-2xl text-white p-8 flex flex-col gap-5 text-lg relative'>
           <h1 className='text-2xl'>Product Details</h1>

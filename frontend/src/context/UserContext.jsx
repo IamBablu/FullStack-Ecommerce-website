@@ -8,6 +8,7 @@ export const UserContext = ({children}) => {
   const [userdata, setUserData] = useState(null)
   const [vendors, setVendors] = useState(null)
   const [products, setProducts] = useState(null)
+  const [cart, setCart] = useState(null)
 
    const getCurrentUser = async () =>{
       try {
@@ -32,7 +33,9 @@ export const UserContext = ({children}) => {
     vendors,
     setVendors,
     products,
-    setProducts
+    setProducts,
+    cart,
+    setCart
   }
   return (
     <div>
@@ -102,4 +105,26 @@ export function Avatar({ name, src, size= 48, style={}}){
           {initials}
         </div>
   )
+}
+
+
+import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
+
+export function StarRating({ count = 4.6 }) {
+  const rating = Math.round(count * 2) / 2;
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    if (rating >= i) stars.push(<FaStar key={i} color="#FFB400" />);
+    else if (rating >= i - 0.5) stars.push(<FaStarHalfAlt key={i} color="#FFB400" />);
+    else stars.push(<FaRegStar key={i} color="#DDD" />);
+  }
+  
+  return (
+    <div className='flex justify-start mx-6 gap-1 items-center'>
+        {stars.map((star, i) => (
+          <p key={i}>{star}</p>
+          ))}
+      <span style={{color: '#007185'}}>{count.toLocaleString()}</span>
+    </div>
+  );
 }

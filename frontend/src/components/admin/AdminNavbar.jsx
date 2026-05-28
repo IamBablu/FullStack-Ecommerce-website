@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import logo from '../../assets/logo.jpeg'
-import image11 from '../../assets/images11.jpg'
 import { IoSearchSharp } from "react-icons/io5";
 import { RiCustomerServiceFill } from "react-icons/ri";
 import { BsCartCheckFill } from "react-icons/bs";
@@ -59,7 +58,6 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
 
 
     const handleChange = (e) => {
-        setError("")
         const { name, value } = e.target;
         setFormData(pre => ({
             ...pre,
@@ -121,9 +119,9 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
                 transition={{ duration: .6, ease: "easeOut", type: "tween" }}
                 className='bg-black h-20 w-full absolute top-0 shadow-2xl hover:shadow-blue-700 text-white flex items-center justify-between px-1 md:px-3 z-10'>
                 <div className='border-white border-4 rounded-full cursor-pointer' onClick={() => navigate('/')}>
-                    <Avatar name={userdata?.data.fullName} src={userdata?.data.avatar} size={70} />
+                    <Avatar name="WebMind" src={logo} size={70} />
                 </div>
-                <h1 style={{ backgroundImage: `url(${image11})` }} className='text-white text-lg md:text-6xl font-black bg-cover bg-center  select-none text-transparent [-webkit-text-fill-color:transparent] bg-clip-text [-webkit-background-clip:text]'>WELCOME TO MY CART</h1>
+                <h1 className='text-lg md:text-6xl font-black bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 bg-cover bg-center  select-none text-transparent [-webkit-text-fill-color:transparent] bg-clip-text [-webkit-background-clip:text]'>WELCOME TO MY CART</h1>
                 <div className='flex items-center justify-center gap-5'>
                     <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
                     <div ref={logoRef} className='border-white border-2 rounded-full cursor-pointer hidden md:block' onClick={() => setOpenProfile((pre) => !pre)}>

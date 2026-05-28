@@ -9,6 +9,7 @@ import {
   updateUser,
   updateAvatar,
   getCurrentUser,
+  addToCart
 } from "../controllers/user.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -26,5 +27,6 @@ routes.route("/update-password").patch(verifyJwt, changePassword);
 routes.route("/update-user").patch(verifyJwt, updateUser);
 routes.route("/update-avatar").patch(verifyJwt, upload.single("avatar"), updateAvatar);
 routes.route("/current-user").get(verifyJwt,getCurrentUser);
+routes.route("/add-to-cart").patch(verifyJwt,addToCart);
 
 export default routes;

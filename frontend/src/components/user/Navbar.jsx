@@ -22,10 +22,9 @@ const Navbar = () => {
     const profileRef = useRef(null)
     const logoRef = useRef(null)
     const navigate = useNavigate()
-    const { userdata, setUserData } = React.useContext(userDataContext)
+    const { userdata, setUserData, cart, setCart } = React.useContext(userDataContext)
 
     const completion = 10;
-
     const [formData, setFormData] = useState({
         loginKey: "",
         password: "",
@@ -42,7 +41,7 @@ const Navbar = () => {
     }
 
 
-
+    console.log("This is cart", cart)
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -51,13 +50,13 @@ const Navbar = () => {
                 setOpenMenu(false)
             }
             // Check for Profile Modal outside click
-            if (openProfile && profileRef.current && !profileRef.current.contains(event.target) && !logoRef.current.contains(event.target) ) {
-               
+            if (openProfile && profileRef.current && !profileRef.current.contains(event.target) && !logoRef.current.contains(event.target)) {
+
                 setOpenProfile(false)
             }
             event.stopPropagation()
         };
-        
+
 
         document.addEventListener('mousedown', handleClickOutside)
         return () => {
@@ -82,34 +81,42 @@ const Navbar = () => {
         console.log("Searching....")
     }
     const handleProfile = (e) => {
-        if(!userdata) navigate('/login')
+        console.log(userdata)
+        if (!userdata) navigate('/login')
         console.log("Profile section")
         e.stopPropagation()
         setOpenProfile((pre) => !pre)
         console.log("Profile section2")
     }
 
-    const handleCart = () => {
-        console.log("Cart section")
-    }
+
     const handleLogOut = async () => {
-    try {
-        console.log("clicked...")
-        await axios.get('http://127.0.0.1:8000/api/v1/users/signout',{withCredentials: true})
-        console.log("clicked...1")
-    setUserData(null)
-    navigate("/login")
-    } catch (error) {
-      console.log(error)
+        try {
+            console.log("clicked...")
+            await axios.get('http://127.0.0.1:8000/api/v1/users/signout', { withCredentials: true })
+            console.log("clicked...1")
+            setUserData(null)
+            navigate("/login")
+        } catch (error) {
+            console.log(error)
+        }
     }
-}
+
+    const getCartSet = () => {
+        console.log("cartsetting : ", userdata?.data.cart )
+        setCart(userdata?.data.cart)
+    }
+    console.log("bablucart: ",cart);
+    useEffect(() => {
+    getCartSet();
+}, [userdata, setCart]);
     return (
         <motion.div key='nav'
             initial={{ x: 400, opacity: 0, scale: 0 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: -200, opacity: 0, scale: 0 }}
             transition={{ duration: .6, ease: "easeOut", type: "tween" }}
-            className='bg-black h-20 w-full absolute top-0 shadow-2xl hover:shadow-blue-700 text-white flex items-center justify-between px-1 md:px-3 z-10'>
+            className='bg-black h-20 w-full absolute top-0 shadow-2xl hover:shadow-blue-700 text-white flex items-center justify-between px-1 md:px-3 z-10 sticky'>
 
             <img src={logo} alt="logo" className='object-cover h-20 w-20 hover:border-white rounded-full border-2 border-blue-600 cursor-pointer transition-all duration-300' onClick={() => navigate('/')} />
 
@@ -123,7 +130,10 @@ const Navbar = () => {
                 <Icon icon={<IoSearchSharp />} onClick={handleSearch} />
                 <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
                 <img ref={logoRef} src={logo} alt="profile" onClick={handleProfile} className='hidden md:block object-cover h-12 w-12 rounded-full border-2 border-blue-600 cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
-                <Icon icon={<BsCartCheckFill onClick={handleCart} />} />
+                <div className='relative'>
+                    <Icon icon={<BsCartCheckFill onClick={()=>navigate('/cart-page')} />} />
+                    <p className='bg-blue-700 h-6 w-6 rounded-full absolute top-0 right-0 text-center cursor-pointer' onClick={()=>navigate('/cart-page')}>{cart?.length}</p>
+                </div>
                 <Icon icon={openMenu ? <ImCross /> : <GiHamburgerMenu />} css='md:hidden' onClick={() => setOpenMenu((pre) => !pre)} />
 
             </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/image1.jpg'
 import { userDataContext } from '../../context/UserContext'
@@ -7,6 +7,7 @@ import axios from 'axios'
 const Products = () => {
   const { serverUrl, userdata, setUserData, products, setProducts } = useContext(userDataContext)
   const navigate = useNavigate()
+  const [activeProducts, setActiveProducts] = useState("Pending")
 
   const handleEnable = async (product) => {
     console.log(product, product.isActive)
@@ -29,12 +30,16 @@ const Products = () => {
 
   }, [products, setProducts])
   return (
-    <div className='bg-blue-300 w-full h-full py-4 flex flex-col items-center gap-3'>
+    <div className='bg-blue-300 w-full h-full py-4 flex flex-col items-center'>
       <div className='bg-gray-950/60 flex justify-between px-20 items-center w-[90%] h-18 rounded-full'>
         <h1 className='text-4xl font-semibold'>Product Details</h1>
         <button className='bg-blue-600 p-2 px-6 rounded-full hover:scale-110 active:scale-90 cursor-pointer transition-all duration-300 text-xl font-semibold' onClick={() => navigate('/add-product')}>+ Add Product</button>
       </div>
-
+      <div className='h-12 w-[90%] bg-gray-500 rounded-full flex justify-center gap-10'>
+        <button className={`${activeProducts == "Pending"? "bg-gray-900": "bg-gray-700"} px-6 py-2 rounded-full hover:scale-110 active:scale-90 transition cursor-pointer`} onClick={()=> setActiveProducts("Pending")}>Pending</button>
+        <button className={`${activeProducts == "Approved"? "bg-gray-900": "bg-gray-700"} px-6 py-2 rounded-full hover:scale-110 active:scale-90 transition cursor-pointer`} onClick={()=> setActiveProducts("Approved")}>Approved</button>
+        <button className={`${activeProducts == "Rejected"? "bg-gray-900": "bg-gray-700"} px-6 py-2 rounded-full hover:scale-110 active:scale-90 transition cursor-pointer`} onClick={()=> setActiveProducts("Rejected")}>Rejected</button>
+      </div>
       <div className='bg-gray-800 h-[85%] w-[90%] rounded-4xl overflow-y-scroll [&::-webkit-scrollbar]:w-0 px-10 py-4'>
         <table className='w-full table-fixed'>
           <thead className='bg-gray-500 text-2xl'>
@@ -49,6 +54,7 @@ const Products = () => {
           </thead>
           <tbody className='bg-gray-700'>
             {products?.map((product, index) => {
+              if(activeProducts == product.verificationStatus ){
               return <tr key={index} className='border-t-2 text-center'>
                 <td className='pl-4 py-1'><img src={product.image[0]} className='h-20 w-20 rounded-lg object-cover' alt="" /></td>
                 <td>{product.title}</td>
@@ -64,37 +70,8 @@ const Products = () => {
                   </div>}
                 </td>
               </tr>
+              }
             })}
-            <tr className='border-t-2 text-center'>
-              <td className='pl-4 py-1'><img src={logo} className='h-20 w-20 rounded-lg object-cover' alt="" /></td>
-              <td>new shoes className='text-center'</td>
-              <td>199</td>
-              <td><span className='bg-yellow-300/50 p-2 px-4 rounded-full'>pending</span></td>
-              <td className='text-red-500'>in active</td>
-              <td>
-                <button className='block bg-green-500 w-[80%] mt-1 rounded-full hover:scale-110 active:scale-90 cursor-pointer transition ml-10'>Edit</button>
-                <button className='block bg-green-500 w-[80%] mt-1 rounded-full hover:scale-110 active:scale-90 cursor-pointer transition ml-10'>Enable</button>
-                <div className='bg-red-400 rounded-lg my-1'>
-                  <p>Rejected: Reason</p>
-                  <p>After edit, product will be sent for re-verification.</p>
-                </div>
-              </td>
-            </tr>
-            <tr className='border-t-2 text-center'>
-              <td className='pl-4 py-1'><img src={logo} className='h-20 w-20 rounded-lg object-cover' alt="" /></td>
-              <td>new shoes className='text-center'</td>
-              <td>199</td>
-              <td><span className='bg-yellow-300/50 p-2 px-4 rounded-full'>pending</span></td>
-              <td className='text-red-500'>in active</td>
-              <td>
-                <button className='block bg-green-500 w-[80%] mt-1 rounded-full hover:scale-110 active:scale-90 cursor-pointer transition ml-10' >Edit</button>
-                <button className='block bg-green-500 w-[80%] mt-1 rounded-full hover:scale-110 active:scale-90 cursor-pointer transition ml-10'>Enable</button>
-                <div className='bg-red-400 rounded-lg my-1'>
-                  <p>Rejected: Reason</p>
-                  <p>After edit, product will be sent for re-verification.</p>
-                </div>
-              </td>
-            </tr>
 
           </tbody>
         </table>

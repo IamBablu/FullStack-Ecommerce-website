@@ -306,6 +306,37 @@ const getCurrentUser = AsyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, user, "Returning userData"));
 });
 
+const addToCart = AsyncHandler(async (req, res) => {
+  const {productId} = req.body;
+  const userId = req.user._id;
+  if(!productId) throw new ApiError(403, "Product id not found")
+  if(!userId) throw new ApiError(403, "User id not found")
+  //if product exist increment it
+  const result = await User.findOneAndUpdate(
+    {_id: userId, "cart.product": productId},
+    {$inc: {"cart.$.quantity": 1}},
+    {returnDocument: "after"}
+  );
+
+
+  // if not push the product
+  if(!result){
+    await User.findByIdAndUpdate(
+      userId,
+      {$push: {cart: {product: productId, quantity: 1}}},
+      {returnDocument: "after"}
+    )
+  }
+  const updateUser = await User.findById(userId)
+  const updatedItem = updateUser.cart.find(
+    item => item.product.toString() === productId
+  );
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200, updatedItem, "Product Addition to cart is successful"))
+})
+
 export {
   logOut,
   loginUser,
@@ -315,5 +346,6 @@ export {
   changePassword,
   updateUser,
   updateAvatar,
-  getCurrentUser
+  getCurrentUser,
+  addToCart
 };

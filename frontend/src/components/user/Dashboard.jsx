@@ -5,6 +5,7 @@ import image3 from '../../assets/image3.webp'
 import { motion, AnimatePresence } from 'motion/react'
 import { IoCaretBack } from "react-icons/io5";
 import { IoCaretForwardOutline } from "react-icons/io5";
+import ProductSection from './ProductSection'
 
 
 const Dashboard = () => {
@@ -62,11 +63,10 @@ const Dashboard = () => {
   const currentCategory = categories.slice(currenCategoryIndex, currenCategoryIndex + 5)
   const currentCategorySm = categories.slice(currenCategoryIndexSm, currenCategoryIndexSm + 3)
 
-  let arr = [1, 2, 3, 4, 5, 6, 7, 8, 90, 11, 21, 12, 14, 32, 2, 3, 211, 2, 3, 2, 3];
 
-
+  
   return (
-    <div className='w-screen text-white pt-20'>
+    <div className='w-screen text-white'>
       <AnimatePresence mode="popLayout">
         <motion.div key={currentIndex}
           initial={{ opacity: 0, x: '100%' }}
@@ -123,28 +123,7 @@ const Dashboard = () => {
           </div>
 
         </motion.div>
-        <div className=' h-screen w-screen overflow-y-scroll [&::-webkit-scrollbar]:w-0 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 p-10 gap-5'>
-          {
-            Array.from({ length: 30 }).map((_, index) => {
-
-             return <motion.div key={`card${index}`}
-             initial={{ opacity: 0, y: 60 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true, amount: 0.2 }}
-                whileHover={{ scale: 1.03 }}
-                className='bg-white h-70 w-54 rounded-2xl hover:shadow-2xl hover:shadow-blue-500'
-              >
-              <div className='relative'>
-                <img src={image1} alt="images" className='mx-8 object-cover h-40 w-36 my-2 rounded-xl'/>
-              {Array.from({length: 4}).map((_, i) => (
-                <div className={`h-10 w-10 ${index == i? 'bg-black': 'bg-gray-700'} rounded-full mx-1 absolute top-0 left-0`}></div>
-            ))}
-              </div>
-              </motion.div>
-            })
-          }
-        </div>
+        <ProductSection />
       </AnimatePresence>
 
     </div>
