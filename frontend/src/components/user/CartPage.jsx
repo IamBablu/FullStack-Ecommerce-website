@@ -12,21 +12,6 @@ const CartPage = () => {
   const navigate = useNavigate();
 
 
-// const handleRemove = async(productId) => {
-//   try {
-//     console.log("heyyy: ", productId, serverUrl)
-//     const result = await axios.patch(`${serverUrl}/users/remove-product`,{productId}, {withCredentials: true}) 
-//     const newCart = result?.data?.data;
-//     console.log("new cart: ",newCart)
-//      if(Array.isArray(newCartArray)){
-//         setCart(newCart)
-//       }else{
-//         setCart([])
-//       }
-//   } catch (error) {
-//     console.error(error)
-//   }
-// }
 
 
 
@@ -55,7 +40,7 @@ const CartPage = () => {
   return (
     <>
       {loading ? <Loading /> : (
-        <div className='scroll-hidden text-white h-screen w-full bg-gradient-to-b from-blue-950 to-black relative overflow-x-hidden'>
+        <div className='scroll-hidden text-white h-screen w-full bg-linear-to-b from-blue-950 to-black relative overflow-x-hidden'>
           <Navbar />
           <div className='flex flex-col gap-5 items-center py-2 h-screen overflow-y-scroll [&::-webkit-scrollbar]:w-0 w-full'>
             {cart?.map((cartItem, i) => {
