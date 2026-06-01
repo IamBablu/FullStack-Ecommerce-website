@@ -13,9 +13,9 @@ const App = () => {
   const {userdata, setUserData} = React.useContext(userDataContext)
   return (
     <Routes>
+      <Route path = '/' element = {<Home />} />
       <Route path = '/signup' element = {userdata? <Navigate to="/" /> : <Signup />} />
       <Route path = '/login' element = {userdata? <Navigate to="/" /> :<Login />} />
-      <Route path = '/' element = {<Home />} />
       <Route path = '/update-vendor-details' element = {<UpdateVendorDetails />} />
       <Route path = '/add-product' element = {<AddProduct />} />
       <Route path = '/edit-product' element = {<EditProduct />} />

@@ -87,10 +87,10 @@ const Signup = () => {
 
 
     return (
-        <div className='text-white h-[100vh] w-full bg-gradient-to-b from-blue-950 to-black flex justify-center items-center relative'>
+        <div className='text-white h-screen w-full bg-gradient-to-b from-blue-950 to-black flex justify-center items-center relative'>
 
-            <div className='lg:hidden h-[100px] w-full bg-black absolute top-0 left-0 flex items-center justify-around'>
-                <img className='w-[100px] h-[100px] rounded-full' src={logo} alt="" />
+            <div className='lg:hidden h-26 w-full bg-black absolute top-0 left-0 flex items-center justify-around'>
+                <img className='w-24 h-24 rounded-full' src={logo} alt="" />
                 <div className='text-center'>
                     <p className='text-2xl text-gray-200 font-semibold'>WellCome To</p>
                     <p className='text-2xl text-blue-400 font-semibold'> My Cart</p>
@@ -104,7 +104,7 @@ const Signup = () => {
                 initial={{ scale: 0, opacity: 0, y: 200 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, type: "spring" }}
-                className='w-[370px] bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-4'>
+                className='w-100 bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-4'>
                 <h1 className='text-3xl'>Choose Your <span className='text-blue-300'>Role</span></h1>
                 <div className='flex gap-4 '>
                     <Rolebox text='User'
@@ -142,7 +142,7 @@ const Signup = () => {
                 {error && <p className='text-red-600'>{error}</p>}
                 <form className='flex flex-col gap-2' onSubmit={handleSignup}>
 
-                    <div className='h-[355px] overflow-y-auto /* 1. Set the width */
+                    <div className='h-100 overflow-y-auto /* 1. Set the width */
             [&::-webkit-scrollbar]:w-1.5
             
             /* 2. Track (Background) - Keep it dark/subtle */
@@ -156,12 +156,12 @@ const Signup = () => {
             hover:[&::-webkit-scrollbar-thumb]:bg-blue-500
             active:[&::-webkit-scrollbar-thumb]:bg-blue-400">'>
                         <p className='text-lg '>Enter Your Full Name</p>
-                        <input required type="text" name='fullName' onChange={handleChange} placeholder='Enter Your Name' className='w-100 rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                        <input required type="text" name='fullName' onChange={handleChange} placeholder='Enter Your Name' className='w-100 rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
                         <p className='text-lg '>Enter Your Username</p>
-                        <input required type="text" name='username' onChange={handleChange} placeholder='Enter Your User Name' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                        <input required type="text" name='username' onChange={handleChange} placeholder='Enter Your User Name' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
                         <div className='relative'>
                             <p className='text-lg '>Enter Your Email Id</p>
-                            <input required type="email" name='email' onChange={handleChange} placeholder='Enter Your Email Id' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                            <input required type="email" name='email' onChange={handleChange} placeholder='Enter Your Email Id' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
                             < Button
                                 text={otpSending ? 'sending' : (otpAttempt > 0 ? "resend" : "send")}
                                 bgColor="bg-green-600 w-[100px] absolute top-8 right-0 border-2 border-x-blue-500"
@@ -170,11 +170,11 @@ const Signup = () => {
                         </div>
                         {sentOtp && <div>
                             <p className='text-lg '>Enter Otp</p>
-                            <input required type="text" name='otp' onChange={handleChange} placeholder='Enter Your Otp' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                            <input required type="text" name='otp' onChange={handleChange} placeholder='Enter Your Otp' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
                         </div>}
                         <p className='text-lg '>Enter Your Password</p>
                         <div className='relative'>
-                            <input required type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                            <input required type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
                             {!showPassword ? (<FaEye className='text-xl absolute top-5 right-5 cursor-pointer' onClick={() => setShowPassword(true)} />) : (<FaEyeSlash className='text-xl absolute top-5 right-5 cursor-pointer' onClick={() => setShowPassword(false)} />)}
 
                         </div>
@@ -182,15 +182,15 @@ const Signup = () => {
                             <div>
 
                                 <p className='text-lg '>Enter Your Shop Name</p>
-                                <input type="text" name='shopName' onChange={handleChange} placeholder='Enter Your Shop Name' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                                <input type="text" name='shopName' onChange={handleChange} placeholder='Enter Your Shop Name' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
 
 
                                 <p className='text-lg '>Enter Your Shop Address</p>
-                                <input type="text" name='shopAddress' onChange={handleChange} placeholder='Enter Your Shop Address' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                                <input type="text" name='shopAddress' onChange={handleChange} placeholder='Enter Your Shop Address' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
 
 
                                 <p className='text-lg '>Enter Your Gst Number</p>
-                                <input type="text" name='gstNumber' onChange={handleChange} placeholder='Enter Your Gst Number' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-4 hover:border-blue-950' />
+                                <input type="text" name='gstNumber' onChange={handleChange} placeholder='Enter Your Gst Number' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
 
                             </div>}
                     </div>

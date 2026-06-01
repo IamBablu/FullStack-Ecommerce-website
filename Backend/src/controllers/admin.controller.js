@@ -83,7 +83,6 @@ const verifyProduct = AsyncHandler(async (req, res) => {
   if (!product) throw new ApiError(400, "product not found");
 
 
-  console.log(product)
   return res
     .status(200)
     .json(new ApiResponse(200, product, "product updated successfully"));

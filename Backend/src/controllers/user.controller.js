@@ -32,7 +32,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 const option = {
   httpOnly: true,
   secure: true,
-  sameSite: "None"
+  sameSite: "None",
 };
 const otpStore = {};
 
@@ -113,7 +113,7 @@ const createUser = AsyncHandler(async (req, res) => {
     shopName,
     shopAddress,
     gstNumber,
-    requestedAt : new Date()
+    requestedAt: new Date(),
   });
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
@@ -128,8 +128,14 @@ const createUser = AsyncHandler(async (req, res) => {
   }
   return res
     .status(200)
-    .cookie("accessToken", accessToken, {...option, maxAge: 24*60*60*1000})
-    .cookie("refreshToken", refreshToken, {...option, maxAge: 480*60*60*1000})
+    .cookie("accessToken", accessToken, {
+      ...option,
+      maxAge: 24 * 60 * 60 * 1000,
+    })
+    .cookie("refreshToken", refreshToken, {
+      ...option,
+      maxAge: 480 * 60 * 60 * 1000,
+    })
     .json(new ApiResponse(200, createdUser, "User register successfully"));
 });
 
@@ -161,8 +167,14 @@ const loginUser = AsyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, option)
-    .cookie("refreshToken", refreshToken, option)
+    .cookie("accessToken", accessToken, {
+      ...option,
+      maxAge: 24 * 60 * 60 * 1000,
+    })
+    .cookie("refreshToken", refreshToken, {
+      ...option,
+      maxAge: 480 * 60 * 60 * 1000,
+    })
     .json(
       new ApiResponse(
         200,
@@ -236,7 +248,7 @@ const updateUser = AsyncHandler(async (req, res) => {
     shopName,
     shopAddress,
     gstNumber,
-    phone
+    phone,
   } = req.body;
 
   if (!(loginKey && password)) throw new ApiError(402, "All fields required");
@@ -258,16 +270,16 @@ const updateUser = AsyncHandler(async (req, res) => {
 
   if (role == "User" || role == "Admin") {
     user.fullName = fullName;
-    user.phone= phone;
+    user.phone = phone;
   } else {
-    user.phone = phone
+    user.phone = phone;
     user.fullName = fullName;
     user.shopName = shopName;
     user.shopAddress = shopAddress;
     user.gstNumber = gstNumber;
     user.requestedAt = new Date();
-    user.verificationStatus = 'Pending';
-    user.rejectedReason = '';
+    user.verificationStatus = "Pending";
+    user.rejectedReason = "";
   }
 
   await user.save({ validateBeforeSave: false });
@@ -293,7 +305,7 @@ const updateAvatar = AsyncHandler(async (req, res) => {
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     { $set: { avatar: avatar.url } },
-    { returnDocument: "after" }
+    { returnDocument: "after" },
   ).select("-password -refreshToken");
 
   return res
@@ -302,40 +314,93 @@ const updateAvatar = AsyncHandler(async (req, res) => {
 });
 
 const getCurrentUser = AsyncHandler(async (req, res) => {
-  const user = await User.findById(req.user?._id).select("-password -refreshToken")
+  const user = await User.findById(req.user?._id).select(
+    "-password -refreshToken",
+  );
   return res.status(200).json(new ApiResponse(200, user, "Returning userData"));
 });
 
-const addToCart = AsyncHandler(async (req, res) => {
-  const {productId} = req.body;
-  const userId = req.user._id;
-  if(!productId) throw new ApiError(403, "Product id not found")
-  if(!userId) throw new ApiError(403, "User id not found")
-  //if product exist increment it
-  const result = await User.findOneAndUpdate(
-    {_id: userId, "cart.product": productId},
-    {$inc: {"cart.$.quantity": 1}},
-    {returnDocument: "after"}
+const EditToCart = AsyncHandler(async (req, res) => {
+  console.log("hiiiii")
+  const { productId, action = "add" } = req.body;
+  const userId = req.user?._id;
+  console.log(productId, action, userId)
+  if (!productId) throw new ApiError(400, "Product Id is required");
+  if (!userId) throw new ApiError(400, "User Id is required");
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(400, "User not found");
+  const isExist = user.cart.find(
+    (item) => item.product.toString() === productId,
   );
-
-
-  // if not push the product
-  if(!result){
+  console.log("bablu: ",isExist)
+  if (action === "add") {
+    if (isExist) {
+      await User.findOneAndUpdate(
+        { _id: userId, "cart.product": productId },
+        { $inc: { "cart.$.quantity": 1 } },
+        { returnDocument: "after" },
+      );
+    } else {
+      await User.findByIdAndUpdate(
+        userId,
+        { $push: { cart: { product: productId, quantity: 1 } } },
+        { returnDocument: "after" },
+      );
+    }
+  } else if (action === "subtract") {
+    if (isExist) {
+      if (isExist.quantity === 1) {
+        await User.findByIdAndUpdate(
+          userId,
+          { $pull: { cart: { product: productId } } },
+          { returnDocument: "after" },
+        );
+      } else if (isExist.quantity > 1) {
+        await User.findOneAndUpdate(
+          { _id: userId, "cart.product": productId },
+          { $inc: { "cart.$.quantity": -1 } },
+          { returnDocument: "after" },
+        );
+      }
+    } else {
+      throw new ApiError(400, "Invalid cart item quantity");
+    }
+  } else if (action == "remove") {
     await User.findByIdAndUpdate(
       userId,
-      {$push: {cart: {product: productId, quantity: 1}}},
-      {returnDocument: "after"}
-    )
+      {
+        $pull: { cart: { product: new mongoose.Types.ObjectId(productId) } },
+      },
+      { returnDocument: "after" },
+    );
   }
-  const updateUser = await User.findById(userId)
-  const updatedItem = updateUser.cart.find(
-    item => item.product.toString() === productId
-  );
 
+  const updatedUser = await User.findById(userId).select("cart");
   return res
-  .status(200)
-  .json(new ApiResponse(200, updatedItem, "Product Addition to cart is successful"))
-})
+    .status(200)
+    .json(new ApiResponse(200, updatedUser.cart, "Cart updated successfully"));
+});
+
+// const removeProduct = AsyncHandler(async (req, res) => {
+//   const { productId } = req.body;
+//   const userId = req.user?._id;
+//   console.log("hii", userId, productId);
+//   if (!productId || !userId)
+//     throw new ApiError(403, "User or product not found");
+//   const newUserData = await User.findByIdAndUpdate(
+//     userId,
+//     {
+//       $pull: { cart: { product: new mongoose.Types.ObjectId(productId) } },
+//     },
+//     { returnDocument: "after" },
+//   ).select("cart");
+
+//   return res
+//     .status(200)
+//     .json(
+//       new ApiResponse(200, newUserData.cart, "product removed Successfully"),
+//     );
+// });
 
 export {
   logOut,
@@ -347,5 +412,5 @@ export {
   updateUser,
   updateAvatar,
   getCurrentUser,
-  addToCart
+  EditToCart,
 };

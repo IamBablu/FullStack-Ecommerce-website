@@ -24,7 +24,6 @@ const createProduct = AsyncHandler(async (req, res) => {
     size = [],
   } = req.body;
 
-  console.log(detailPoints);
 
   const vendorId = req.user?._id;
   if (!vendorId) throw new ApiError(400, "Unauthorized request");
@@ -95,7 +94,6 @@ const editProduct = AsyncHandler(async (req, res) => {
     size = [],
     existingImg = [],
   } = req.body;
-  console.log("khfghj: ", existingImg)
   const vendorId = req.user?._id;
   if (!vendorId) throw new ApiError(400, "Unauthorized request");
 
@@ -123,7 +121,6 @@ const editProduct = AsyncHandler(async (req, res) => {
 
 
 const finalImgList = [...keptUrl, ...cleanImageUrl];
-console.log("byeeee", finalImgList, keptUrl, cleanImageUrl)
   if (finalImgList.length === 0) throw new ApiError(403, "images not found");
   const product = await Product.findByIdAndUpdate(
     productId,
@@ -191,10 +188,23 @@ const activeProduct = AsyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, products, "IsActive Edited"));
 });
+const getCartProduct = AsyncHandler(async(req, res) => {
+  const {ids} = req.query;
+  if(!ids) throw new ApiError(403, "ids not found")
+
+  const parsedIds = JSON.parse(ids);
+  if(!Array.isArray(parsedIds) || parsedIds.length === 0) throw new ApiError(403, "ids should be an array")
+  const products = await Product.find({_id: {$in: parsedIds}});
+
+  return res
+  .status(200)
+  .json(new ApiResponse(200, products, "products fetched successful"))
+})
 export {
   createProduct,
   getMyProduct,
   getUserProduct,
   editProduct,
   activeProduct,
+  getCartProduct
 };

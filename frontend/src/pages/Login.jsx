@@ -64,22 +64,22 @@ const Login = () => {
                 initial={{ scale: 0, opacity: 0, y: 200 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, type: "spring" }}
-                className='w-[370px]  bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-4'>
+                className='w-120  bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-4'>
                 <h1 className='text-3xl'>Login to <span className='text-blue-300'>MyCart</span></h1>
                 {error && <p className='text-red-600'>{error}</p>}
                 <form className='flex flex-col gap-2' onSubmit={handleLogin}>
 
                     <p className='text-lg '>Enter Your Username or Email Id</p>
-                    <input type="text" name='loginKey' onChange={handleChange} placeholder='Enter Your User Name or Email Id' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
+                    <input type="text" name='loginKey' onChange={handleChange} placeholder='Enter Your User Name or Email Id' className='w-100 rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
                     <p className='text-lg '>Enter Your Password</p>
                     <div className='relative'>
-                        <input type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-[300px] h-[60px] rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-blue-950' />
+                        <input type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
                         {!showPassword ? (<FaEye className='text-xl absolute top-5 right-5 cursor-pointer' onClick={() => setShowPassword(true)} />) : (<FaEyeSlash className='text-xl absolute top-5 right-5 cursor-pointer' onClick={() => setShowPassword(false)} />)}
 
                     </div>
                     < Button type='submit'
                         text={loading? "Login...." : <span className='flex items-center justify-center gap-1 '>Login <TbPlayerTrackNextFilled className='mt-2' /></span>}
-                        bgColor="bg-green-600 w-[300px]"
+                        bgColor="bg-green-600 w-full"
                         disable={loading} />
                 </form>
                 <p className='cursor-pointer hover:underline' onClick={() => navigate("/signup")}>Create New Account <span className='text-blue-500'>Register</span></p>

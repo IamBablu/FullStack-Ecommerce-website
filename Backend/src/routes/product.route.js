@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { createProduct, getMyProduct, getUserProduct, editProduct, activeProduct} from "../controllers/product.controller.js";
+import { createProduct, getMyProduct, getUserProduct, editProduct, activeProduct, getCartProduct} from "../controllers/product.controller.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
@@ -11,5 +11,6 @@ routsP.route('/edit-product').patch(verifyJwt, upload.array('images', 4), editPr
 routsP.route('/active-product').patch(verifyJwt, activeProduct);
 routsP.route('/get-my-product').get(verifyJwt, getMyProduct);
 routsP.route('/get-user-product').get(getUserProduct);
+routsP.route("/get-cart-product").get(verifyJwt,getCartProduct);
 
 export default routsP

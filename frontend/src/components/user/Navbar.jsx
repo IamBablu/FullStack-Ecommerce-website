@@ -40,9 +40,6 @@ const Navbar = () => {
 
     }
 
-
-    console.log("This is cart", cart)
-
     useEffect(() => {
         const handleClickOutside = (event) => {
             // Check for Mobile Menu outside click
@@ -81,35 +78,28 @@ const Navbar = () => {
         console.log("Searching....")
     }
     const handleProfile = (e) => {
-        console.log(userdata)
         if (!userdata) navigate('/login')
-        console.log("Profile section")
         e.stopPropagation()
         setOpenProfile((pre) => !pre)
-        console.log("Profile section2")
     }
 
 
     const handleLogOut = async () => {
         try {
-            console.log("clicked...")
             await axios.get('http://127.0.0.1:8000/api/v1/users/signout', { withCredentials: true })
-            console.log("clicked...1")
             setUserData(null)
+            setCart([])
             navigate("/login")
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 
-    const getCartSet = () => {
-        console.log("cartsetting : ", userdata?.data.cart )
-        setCart(userdata?.data.cart)
-    }
-    console.log("bablucart: ",cart);
     useEffect(() => {
-    getCartSet();
-}, [userdata, setCart]);
+    if(userdata?.data?.cart && cart.length == 0){
+        setCart(userdata.data.cart)
+    }
+}, [userdata]);
     return (
         <motion.div key='nav'
             initial={{ x: 400, opacity: 0, scale: 0 }}
@@ -131,8 +121,9 @@ const Navbar = () => {
                 <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
                 <img ref={logoRef} src={logo} alt="profile" onClick={handleProfile} className='hidden md:block object-cover h-12 w-12 rounded-full border-2 border-blue-600 cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
                 <div className='relative'>
-                    <Icon icon={<BsCartCheckFill onClick={()=>navigate('/cart-page')} />} />
-                    <p className='bg-blue-700 h-6 w-6 rounded-full absolute top-0 right-0 text-center cursor-pointer' onClick={()=>navigate('/cart-page')}>{cart?.length}</p>
+                    <Icon icon={<BsCartCheckFill onClick={()=>{userdata? navigate('/cart-page') : navigate('/login')}} />} />
+                        {cart?.length > 0 && <p className='bg-blue-700 h-6 w-6 rounded-full absolute top-0 right-0 text-center cursor-pointer' onClick={()=>navigate('/cart-page')}>{cart?.length}</p>
+}
                 </div>
                 <Icon icon={openMenu ? <ImCross /> : <GiHamburgerMenu />} css='md:hidden' onClick={() => setOpenMenu((pre) => !pre)} />
 
