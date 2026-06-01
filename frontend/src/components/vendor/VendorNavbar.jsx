@@ -38,7 +38,7 @@ const VendorNavbar = () => {
             className='bg-black h-20 w-full absolute top-0 shadow-2xl hover:shadow-blue-700 text-white flex items-center justify-between px-1 md:px-3 z-10'>
 
             <Avatar name="WebMind" src={logo} size={70} />
-            <h1 className='text-6xl font-black bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 bg-cover bg-center  select-none text-transparent [-webkit-text-fill-color:transparent] bg-clip-text [-webkit-background-clip:text]'>WELCOME TO MY CART</h1>
+            <h1 className='text-6xl font-black bg-linear-to-r from-red-500 via-purple-500 to-blue-500 bg-cover bg-center  select-none text-transparent [-webkit-text-fill-color:transparent] bg-clip-text [-webkit-background-clip:text]'>WELCOME TO MY CART</h1>
             <div className='flex items-center justify-center gap-5'>
                 <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
                 <div className='border-white border-2 rounded-full cursor-pointer hidden md:block' onClick={() => navigate('/update-vendor-details')}>

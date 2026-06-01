@@ -37,7 +37,7 @@ const Home = () => {
 
   const handleLogOut = async () => {
     try {
-    await axios.get('http://127.0.0.1:8000/api/v1/users/signout',{withCredentials: true})
+    await axios.get(`${serverUrl}/users/signout`,{withCredentials: true})
     setUserData(null)
     navigate("/login")
     } catch (error) {
@@ -46,7 +46,7 @@ const Home = () => {
   }
   return (
     <AnimatePresence mode='wait'>
-      <motion.div className='scroll-hidden text-white h-[100vh] w-full bg-gradient-to-b from-blue-950 to-black relative overflow-x-hidden'>
+      <motion.div className='scroll-hidden text-white h-screen w-full bg-linear-to-b from-blue-950 to-black relative overflow-x-hidden'>
       {renderComponent()}
       </motion.div>
     </AnimatePresence>

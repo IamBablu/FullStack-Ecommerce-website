@@ -8,7 +8,7 @@ const VendorApproval = () => {
   const [status, setStatus] = useState('Pending')
   const [reason, setReason] = useState('')
   const [loading, setLoading] = useState(false)
-  const [pendingVendors, setPendingVendors] = useState(() => vendors?.filter(items => items.verificationStatus == "Pending"))
+  const [pendingVendors, setPendingVendors] = useState([])
 
 
 
@@ -27,6 +27,10 @@ const VendorApproval = () => {
       setSelectedVendor(null)
     }
   }
+
+  useEffect(() => {
+  setPendingVendors(vendors?.filter(v => v.verificationStatus === "Pending"))
+}, [vendors])
   return (
     <div className='bg-black/70 h-full px-8 relative'>
       <h1 className='text-4xl text-center py-2'>Vendor Details</h1>
@@ -75,7 +79,7 @@ const VendorApproval = () => {
             <p className="text-right text-xs text-gray-500 mt-1">
               {reason.length}/100
             </p>
-            <button className='text-lg font-semibold bg-red-600 py-2 w-[300px] rounded-full hover:bg-red-900 cursor-pointer transition-all duration-300 hover:scale-110 active:scale-90' onClick={() => {
+            <button className='text-lg font-semibold bg-red-600 py-2 w-80 rounded-full hover:bg-red-900 cursor-pointer transition-all duration-300 hover:scale-110 active:scale-90' onClick={() => {
               const newStatus = status;
               handleVerify(newStatus);
             }}> Confirm Reject</button>

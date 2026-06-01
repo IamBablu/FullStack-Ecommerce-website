@@ -38,7 +38,7 @@ const createProduct = AsyncHandler(async (req, res) => {
   });
   const imageUrl = await Promise.all(uploadPromises);
   const cleanImageUrl = imageUrl.filter((url) => url !== null);
-  if (!cleanImageUrl) throw new ApiError(500, "Error in Uploading images");
+  if (cleanImageUrl.length === 0) throw new ApiError(500, "Error in Uploading images");
 
   const product = await Product.create({
     title,
@@ -65,7 +65,7 @@ const createProduct = AsyncHandler(async (req, res) => {
   const vendorUpdate = await User.findByIdAndUpdate(
     vendorId,
     {
-      $set: { vendorProduct: createProduct._id },
+      $push: { vendorProduct: createProduct._id },
     },
     { returnDocument: "after" },
   );
@@ -147,7 +147,7 @@ const finalImgList = [...keptUrl, ...cleanImageUrl];
 
   return res
     .status(200)
-    .json(new ApiResponse(200, Product, "product has Edited successfully"));
+    .json(new ApiResponse(200, product, "product has Edited successfully"));
 });
 
 const getMyProduct = AsyncHandler(async (req, res) => {

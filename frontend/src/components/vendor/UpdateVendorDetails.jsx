@@ -73,13 +73,13 @@ const UpdateVendorDetails = () => {
 
 
     return (
-        <div className='text-white h-[100vh] w-full bg-gradient-to-b from-blue-950 to-black flex justify-center items-center relative'>
+        <div className='text-white h-screen w-full bg-linear-to-b from-blue-950 to-black flex justify-center items-center relative'>
 
             <motion.div
                 initial={{ scale: 0, opacity: 0, y: 200 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, type: "spring" }}
-                className='w-[370px]  bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-4 relative'>
+                className='w-92  bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-4 relative'>
                  <IoArrowBackSharp className='text-2xl absolute top-5 left-5 cursor-pointer' onClick={()=>navigate('/')}/>
                 <div className='text-center relative flex justify-around items-center gap-7'>
                     <img src={logo} alt="profile" className='object-cover h-16 w-16 rounded-full border-2 border-black cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
@@ -90,7 +90,7 @@ const UpdateVendorDetails = () => {
                 {error && <p className='text-red-600'>{error}</p>}
                 <form className='flex flex-col gap-2' onSubmit={handleUpdate}>
 
-                    <div className='pr-2 h-[355px] overflow-y-auto /* 1. Set the width */
+                    <div className='pr-2 h-88 overflow-y-auto /* 1. Set the width */
             [&::-webkit-scrollbar]:w-1.5
             
             /* 2. Track (Background) - Keep it dark/subtle */

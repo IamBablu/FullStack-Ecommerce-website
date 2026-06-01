@@ -4,13 +4,13 @@ import { createProduct, getMyProduct, getUserProduct, editProduct, activeProduct
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
-const routsP = Router()
+const routes = Router()
 
-routsP.route('/create-product').post(verifyJwt, upload.array('images', 4), createProduct);
-routsP.route('/edit-product').patch(verifyJwt, upload.array('images', 4), editProduct);
-routsP.route('/active-product').patch(verifyJwt, activeProduct);
-routsP.route('/get-my-product').get(verifyJwt, getMyProduct);
-routsP.route('/get-user-product').get(getUserProduct);
-routsP.route("/get-cart-product").get(verifyJwt,getCartProduct);
+routes.route('/create-product').post(verifyJwt, upload.array('images', 4), createProduct);
+routes.route('/edit-product').patch(verifyJwt, upload.array('images', 4), editProduct);
+routes.route('/active-product').patch(verifyJwt, activeProduct);
+routes.route('/get-my-product').get(verifyJwt, getMyProduct);
+routes.route('/get-user-product').get(getUserProduct);
+routes.route("/get-cart-product").get(verifyJwt,getCartProduct);
 
-export default routsP
+export default routes

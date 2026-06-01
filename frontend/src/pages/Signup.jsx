@@ -81,13 +81,13 @@ const Signup = () => {
             setUserData(null)
             console.error(error)
             setError(error.message)
-            setLoading(true)
+            setLoading(false)
         }
     }
 
 
     return (
-        <div className='text-white h-screen w-full bg-gradient-to-b from-blue-950 to-black flex justify-center items-center relative'>
+        <div className='text-white h-screen w-full bg-linear-to-b from-blue-950 to-black flex justify-center items-center relative'>
 
             <div className='lg:hidden h-26 w-full bg-black absolute top-0 left-0 flex items-center justify-around'>
                 <img className='w-24 h-24 rounded-full' src={logo} alt="" />

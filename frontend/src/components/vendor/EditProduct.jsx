@@ -267,7 +267,7 @@ const EditProduct = () => {
                             <div className='flex flex-col gap-1 border-white border-2 h-24 overflow-y-scroll [&::-webkit-scrollbar]:w-0 overflow-x-hidden'>
                                 {
                                     formData.detailPoints?.map((point, index) => {
-                                        return <div key={point} className='w-full flex'>
+                                        return <div key={`details-point-${index}`} className='w-full flex'>
                                             <p className='text-lg w-[70%] bg-gray-900 px-4'>{index + 1 + ". " + point}</p>
                                             <button type='button' onClick={() => removeDetailPoint(index)} className='bg-blue-700 px-13 rounded-lg cursor-pointer hover:scale-110 active:scale-90 transition'> X </button>
                                         </div>

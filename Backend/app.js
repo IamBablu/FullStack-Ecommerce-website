@@ -1,9 +1,9 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import routes from './src/routes/user.route.js'
-import routes1 from './src/routes/admin.route.js'
-import routsP from './src/routes/product.route.js'
+import UserRoutes from './src/routes/user.route.js'
+import AdminRoutes from './src/routes/admin.route.js'
+import ProductRoutes from './src/routes/product.route.js'
 
 const app = express()
 
@@ -12,14 +12,15 @@ app.use(cors({
     credentials : true
 }))
 
-app.use(express.json())
+app.use(express.json({limit: "16kb"}))
+app.use(express.urlencoded({ extended: true, limit: "16kb" }))
 app.use(express.static('/public'))
 app.use(cookieParser())
 
 
-app.use("/api/v1/users", routes)
-app.use("/api/v1/admin", routes1)
-app.use("/api/v1/product", routsP)
+app.use("/api/v1/users", UserRoutes)
+app.use("/api/v1/admin", AdminRoutes)
+app.use("/api/v1/product", ProductRoutes)
 
 
 app.use((err, req, res, next) => {

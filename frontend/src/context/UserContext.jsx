@@ -15,7 +15,7 @@ export const UserContext = ({children}) => {
     try {
       setLoading(true)
       const result = await axios.get(`${serverUrl}/users/current-user`,{ withCredentials: true });
-      setUserData(result.data);
+      setUserData(result?.data?.data || null);
     } catch (error) {
       console.error(error);
       setUserData(null)

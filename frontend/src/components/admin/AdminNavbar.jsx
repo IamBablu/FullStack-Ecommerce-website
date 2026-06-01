@@ -22,6 +22,7 @@ import Sidebar from './Sidebar'
 const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
     const [openProfile, setOpenProfile] = useState()
     const [openMenu, setOpenMenu] = useState(false)
+    const [error, setError] = useState(null)
     const [selectedAvatar, setSelectedAvatar] = useState('')
     const navigate = useNavigate()
     const { serverUrl, userdata, setUserData } = React.useContext(userDataContext)
@@ -90,7 +91,7 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
                 const formData = new FormData()
                 formData.append('avatar', avatar)
                 const result = await axios.patch(`${serverUrl}/users/update-avatar`, formData, { withCredentials: true })
-                setUserData(result.data)
+                setUserData(result.data.data)
                 navigate('/')
             }
         } catch (error) {
@@ -121,7 +122,7 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
                 <div className='border-white border-4 rounded-full cursor-pointer' onClick={() => navigate('/')}>
                     <Avatar name="WebMind" src={logo} size={70} />
                 </div>
-                <h1 className='text-lg md:text-6xl font-black bg-gradient-to-r from-red-500 via-purple-500 to-blue-500 bg-cover bg-center  select-none text-transparent [-webkit-text-fill-color:transparent] bg-clip-text [-webkit-background-clip:text]'>WELCOME TO MY CART</h1>
+                <h1 className='text-lg md:text-6xl font-black bg-linear-to-r from-red-500 via-purple-500 to-blue-500 bg-cover bg-center  select-none text-transparent [-webkit-text-fill-color:transparent] bg-clip-text [-webkit-background-clip:text]'>WELCOME TO MY CART</h1>
                 <div className='flex items-center justify-center gap-5'>
                     <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
                     <div ref={logoRef} className='border-white border-2 rounded-full cursor-pointer hidden md:block' onClick={() => setOpenProfile((pre) => !pre)}>
@@ -153,20 +154,20 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
 
                         <div>
                             <p>Enter Your Username or EmailId</p>
-                            <input required disabled type="text" name='loginKey' onChange={handleChange} value={formData.loginKey} placeholder='Enter Your Username or EmailId' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
+                            <input required disabled type="text" name='loginKey' onChange={handleChange} value={formData.loginKey} placeholder='Enter Your Username or EmailId' className='w-80 h-10 rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-5 hover:border-4 hover:border-black transition-all duration-500' />
                         </div>
                         <div>
                             <p>Enter Your Full Name</p>
-                            <input required type="text" name='fullName' onChange={handleChange} value={formData.fullName} placeholder='Enter Your Name' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
+                            <input required type="text" name='fullName' onChange={handleChange} value={formData.fullName} placeholder='Enter Your Name' className='w-80 h-10 rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-5 hover:border-4 hover:border-black transition-all duration-500' />
                         </div>
 
                         <div>
                             <p>Enter Your Phone Number</p>
-                            <input type="text" name='phone' onChange={handleChange} value={formData.phone} placeholder='Enter Your Phone Number' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
+                            <input type="text" name='phone' onChange={handleChange} value={formData.phone} placeholder='Enter Your Phone Number' className='w-80 h-10 rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-5 hover:border-4 hover:border-black transition-all duration-500' />
                         </div>
                         <div>
                             <p>Enter Your Password</p>
-                            <input required type="text" name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
+                            <input required type="text" name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-80 h-10 rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-5 hover:border-4 hover:border-black transition-all duration-500' />
                         </div>
                         <Button text='Update Details' css='h-10 bg-green-700 transition-transform duration-150 active:scale-95 hover:scale-105' onClick={handleUpdate} />
                         <Button text='Logout' css='h-10 bg-green-700 transition-transform duration-150 active:scale-95 hover:scale-105' onClick={handleLogOut} />
