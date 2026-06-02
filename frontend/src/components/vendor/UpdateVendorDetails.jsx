@@ -10,6 +10,7 @@ import { IoArrowBackSharp } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
+import { Avatar } from '../../context/UserContext';
 
 const UpdateVendorDetails = () => {
     const {serverUrl, userdata, setUserData} = React.useContext(userDataContext)
@@ -57,15 +58,15 @@ const UpdateVendorDetails = () => {
     }
 
     useEffect(()=>{
-        if(userdata?.data){
+        if(userdata){
         setFormData(pre=>({
         ...pre,
-        loginKey: userdata.data.username || "",
-        phone: userdata.data.phone || "",
-        fullName: userdata.data.fullName || "",
-        shopName: userdata.data.shopName || "",
-        shopAddress: userdata.data.shopAddress || "",
-        gstNumber: userdata.data.gstNumber || "",
+        loginKey: userdata.username || "",
+        phone: userdata.phone || "",
+        fullName: userdata.fullName || "",
+        shopName: userdata.shopName || "",
+        shopAddress: userdata.shopAddress || "",
+        gstNumber: userdata.gstNumber || "",
 
         }))
     }
@@ -82,8 +83,8 @@ const UpdateVendorDetails = () => {
                 className='w-92  bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-4 relative'>
                  <IoArrowBackSharp className='text-2xl absolute top-5 left-5 cursor-pointer' onClick={()=>navigate('/')}/>
                 <div className='text-center relative flex justify-around items-center gap-7'>
-                    <img src={logo} alt="profile" className='object-cover h-16 w-16 rounded-full border-2 border-black cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
-                    <MdAddPhotoAlternate className='absolute bottom-2 left-10 text-3xl cursor-pointer' />
+                    <Avatar name={userdata?.fullName} src={userdata?.avatar} size={64}/>
+                    <MdAddPhotoAlternate className='absolute bottom-1 left-9 text-3xl cursor-pointer' />
                     <Button text='Update Avatar' css='h-10 bg-green-700 transition-transform duration-150 active:scale-95 hover:scale-105' />
                 </div>
 

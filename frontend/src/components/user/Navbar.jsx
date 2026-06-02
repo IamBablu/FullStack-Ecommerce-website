@@ -96,8 +96,8 @@ const Navbar = () => {
     }
 
     useEffect(() => {
-    if(userdata?.data?.cart && cart.length == 0){
-        setCart(userdata.data.cart)
+    if(userdata?.cart && cart?.length == 0){
+        setCart(userdata.cart)
     }
 }, [userdata]);
     return (

@@ -321,10 +321,8 @@ const getCurrentUser = AsyncHandler(async (req, res) => {
 });
 
 const EditToCart = AsyncHandler(async (req, res) => {
-  console.log("hiiiii")
   const { productId, action = "add" } = req.body;
   const userId = req.user?._id;
-  console.log(productId, action, userId)
   if (!productId) throw new ApiError(400, "Product Id is required");
   if (!userId) throw new ApiError(400, "User Id is required");
   const user = await User.findById(userId);
@@ -332,7 +330,6 @@ const EditToCart = AsyncHandler(async (req, res) => {
   const isExist = user.cart.find(
     (item) => item.product.toString() === productId,
   );
-  console.log("bablu: ",isExist)
   if (action === "add") {
     if (isExist) {
       await User.findOneAndUpdate(
@@ -381,26 +378,6 @@ const EditToCart = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedUser.cart, "Cart updated successfully"));
 });
 
-// const removeProduct = AsyncHandler(async (req, res) => {
-//   const { productId } = req.body;
-//   const userId = req.user?._id;
-//   console.log("hii", userId, productId);
-//   if (!productId || !userId)
-//     throw new ApiError(403, "User or product not found");
-//   const newUserData = await User.findByIdAndUpdate(
-//     userId,
-//     {
-//       $pull: { cart: { product: new mongoose.Types.ObjectId(productId) } },
-//     },
-//     { returnDocument: "after" },
-//   ).select("cart");
-
-//   return res
-//     .status(200)
-//     .json(
-//       new ApiResponse(200, newUserData.cart, "product removed Successfully"),
-//     );
-// });
 
 export {
   logOut,

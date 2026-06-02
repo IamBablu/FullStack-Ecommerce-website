@@ -100,12 +100,12 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
     }
 
     useEffect(() => {
-        if (userdata?.data) {
+        if (userdata) {
             setFormData(pre => ({
                 ...pre,
-                loginKey: userdata.data.username || "",
-                phone: userdata.data.phone || "",
-                fullName: userdata.data.fullName || "",
+                loginKey: userdata.username || "",
+                phone: userdata.phone || "",
+                fullName: userdata.fullName || "",
             }))
         }
     }, [userdata])
@@ -126,7 +126,7 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
                 <div className='flex items-center justify-center gap-5'>
                     <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
                     <div ref={logoRef} className='border-white border-2 rounded-full cursor-pointer hidden md:block' onClick={() => setOpenProfile((pre) => !pre)}>
-                        <Avatar name={userdata?.data.fullName} src={userdata?.data.avatar} />
+                        <Avatar name={userdata?.fullName} src={userdata?.avatar} />
                     </div>
                     <Icon icon={openMenu ? <ImCross /> : <LuSquareMenu />} onClick={() => setOpenMenu(pre => !pre)} css='md:hidden' />
                 </div>
@@ -143,7 +143,7 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
                             <div className='border-white border-2 rounded-full cursor-pointer' onClick={() => avatarRef.current.click()}>
                                 {selectedAvatar ?
                                     <img src={selectedAvatar} alt="profile" className='object-cover h-16 w-16 rounded-full border-2 border-black cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
-                                    : <Avatar name={userdata?.data.fullName} src={userdata?.data.avatar} size={58} />
+                                    : <Avatar name={userdata?.fullName} src={userdata?.avatar} size={58} />
                                 }
                             </div>
                             <MdAddPhotoAlternate onClick={() => avatarRef.current.click()} className='absolute bottom-2 left-16 text-3xl cursor-pointer' />

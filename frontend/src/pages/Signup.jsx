@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { frameData, motion } from "motion/react"
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
-import Button from '../components/button';
+import Button from '../components/Button';
 import Rolebox from '../components/Rolebox';
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";

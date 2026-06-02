@@ -36,7 +36,6 @@ export const UserContext = ({children}) => {
     }
     try {
       setLoading(true);
-      console.log(action)
       const result = await axios.patch(
         `${serverUrl}/users/add-to-cart`, 
         { productId: product._id, action }, 

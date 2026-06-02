@@ -42,7 +42,7 @@ const VendorNavbar = () => {
             <div className='flex items-center justify-center gap-5'>
                 <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
                 <div className='border-white border-2 rounded-full cursor-pointer hidden md:block' onClick={() => navigate('/update-vendor-details')}>
-                    <Avatar name={userdata?.data.fullName} src={userdata?.data.avatar} />
+                    <Avatar name={userdata?.fullName} src={userdata?.avatar} />
                 </div>
             </div>
         </motion.div>

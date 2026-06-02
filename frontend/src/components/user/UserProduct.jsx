@@ -16,7 +16,7 @@ const UserProduct = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const product = location.state?.product;
-  const { serverUrl, userdata, setUserData, cart, setCart, addToCartGlobal } = useContext(userDataContext)
+  const { serverUrl, userdata, setUserData, cart, setCart, editToCartGlobal } = useContext(userDataContext)
   const [currentIndex, setCurrentIndex] = useState(0)
   const pageRef = useRef()
 
@@ -26,7 +26,7 @@ const UserProduct = () => {
   }
 
   return (
-    <div ref={pageRef} className='scroll-hidden text-white h-screen w-full bg-gradient-to-b from-blue-950 to-black relative overflow-x-hidden'>
+    <div ref={pageRef} className='scroll-hidden text-white h-screen w-full bg-linear-to-b from-blue-950 to-black relative overflow-x-hidden'>
       <Navbar />
       <div className='w-full'>
         <div className='flex gap-2 px-40 py-10'>
@@ -50,7 +50,7 @@ const UserProduct = () => {
             </div>
             <p className='text-gray-400 h-20 overflow-y-scroll [&::-webkit-scrollbar]:w-0 w-180 flex items-center'><span>{product?.description}</span></p>
             <p>Stock: <span className={`${product?.isStockAvailable? "text-green-700" : "text-red-700"} font-semibold`}>{product?.isStockAvailable? "In Stock" : "Out of Stock"}</span></p>
-            <div className='bg-blue-700 flex gap-1 items-center justify-center w-[80%] my-2 py-2 rounded-lg hover:scale-110 active:scale-90 transition cursor-pointer' onClick={(e) => {e.stopPropagation(); addToCartGlobal(product, 'add', navigate)}}>
+            <div className='bg-blue-700 flex gap-1 items-center justify-center w-[80%] my-2 py-2 rounded-lg hover:scale-110 active:scale-90 transition cursor-pointer' onClick={(e) => {e.stopPropagation(); editToCartGlobal(product, 'add', navigate)}}>
               <BsCartCheckFill className='cursor-pointer' />
               <button className='cursor-pointer'> Add to Cart</button>
             </div>

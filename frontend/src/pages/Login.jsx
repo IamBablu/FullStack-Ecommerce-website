@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Button from '../components/button'
+import Button from '../components/Button'
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
