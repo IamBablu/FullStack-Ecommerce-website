@@ -19,13 +19,13 @@ import Sidebar from './Sidebar'
 
 
 
-const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
+const AdminNavbar = () => {
     const [openProfile, setOpenProfile] = useState()
     const [openMenu, setOpenMenu] = useState(false)
     const [error, setError] = useState(null)
     const [selectedAvatar, setSelectedAvatar] = useState('')
     const navigate = useNavigate()
-    const { serverUrl, userdata, setUserData } = React.useContext(userDataContext)
+    const { serverUrl, userdata, setUserData, activePage, setActivePage } = React.useContext(userDataContext)
     const profileRef = useRef()
     const menuRef = useRef()
     const logoRef = useRef()
@@ -100,6 +100,7 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
     }
 
     useEffect(() => {
+        setActivePage("Dashboard")
         if (userdata) {
             setFormData(pre => ({
                 ...pre,
@@ -182,7 +183,7 @@ const AdminNavbar = ({ activePageAdmin, setActivePageAdmin }) => {
                         transition={{ duration: .6, ease: "easeOut", type: "tween" }}
                         className='bg-gray-800 md:bg-gray-800/80 rounded-4xl py-5 z-10 absolute top-20 text-center flex flex-col items-center w-screen md:hidden'>
 
-                        <Sidebar setOpenMenu={setOpenMenu} activePageAdmin={activePageAdmin} setActivePageAdmin={setActivePageAdmin} css='md:hidden w-[80vw]' />
+                        <Sidebar setOpenMenu={setOpenMenu} activePage={activePage} setActivePage={setActivePage} css='md:hidden w-[80vw]' />
                         <Button text='Update Avatar' css='h-10 bg-green-700 transition-transform duration-150 active:scale-95 w-[80%] my-3' onClick={() => setOpenProfile(true)} />
 
                     </motion.div>

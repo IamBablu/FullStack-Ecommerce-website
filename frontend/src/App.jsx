@@ -10,6 +10,7 @@ import EditProduct from './components/vendor/EditProduct'
 import UserProduct from './components/user/UserProduct'
 import CartPage from './components/user/CartPage'
 import CheckOutPage from './components/user/CheckOutPage'
+import Orders from './components/user/Orders'
 const App = () => {
   const {userdata, setUserData} = React.useContext(userDataContext)
   return (
@@ -23,6 +24,7 @@ const App = () => {
       <Route path = '/user-product' element = {<UserProduct />} />
       <Route path = '/cart-page' element = {<CartPage />} />
       <Route path = '/checkout-page' element = {<CheckOutPage />} />
+      <Route path = '/orders' element = {<Orders />} />
         
     </Routes>
   )

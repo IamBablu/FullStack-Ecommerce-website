@@ -77,6 +77,8 @@ const userSchema = new Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "product"
     }],
+
+    // for user
     orders: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'orders'

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import logo from '../../assets/logo.jpeg'
 import { IoSearchSharp } from "react-icons/io5";
@@ -22,7 +22,7 @@ const Navbar = () => {
     const profileRef = useRef(null)
     const logoRef = useRef(null)
     const navigate = useNavigate()
-    const { userdata, setUserData, cart, setCart } = React.useContext(userDataContext)
+    const { serverUrl, userdata, setUserData, cart, setCart, activePage, setActivePage } = useContext(userDataContext)
 
     const completion = 10;
     const [formData, setFormData] = useState({
@@ -61,19 +61,6 @@ const Navbar = () => {
         }
     }, [openMenu, openProfile])
 
-
-    const handleHome = () => {
-        console.log("Clicked")
-    }
-    const handleCategories = () => {
-        console.log("Categories")
-    }
-    const handleShop = () => {
-        console.log("Shope")
-    }
-    const handleOrders = () => {
-        console.log("Orders.")
-    }
     const handleSearch = () => {
         console.log("Searching....")
     }
@@ -86,7 +73,7 @@ const Navbar = () => {
 
     const handleLogOut = async () => {
         try {
-            await axios.get('http://127.0.0.1:8000/api/v1/users/signout', { withCredentials: true })
+            await axios.get(`${serverUrl}/users/signout`, { withCredentials: true })
             setUserData(null)
             setCart([])
             navigate("/login")
@@ -96,34 +83,35 @@ const Navbar = () => {
     }
 
     useEffect(() => {
-    if(userdata?.cart && cart?.length == 0){
-        setCart(userdata.cart)
-    }
-}, [userdata]);
+
+        if (userdata?.cart && cart?.length == 0) {
+            setCart(userdata.cart)
+        }
+    }, [userdata]);
     return (
         <motion.div key='nav'
             initial={{ x: 400, opacity: 0, scale: 0 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: -200, opacity: 0, scale: 0 }}
             transition={{ duration: .6, ease: "easeOut", type: "tween" }}
-            className='bg-black h-20 w-full absolute top-0 shadow-2xl hover:shadow-blue-700 text-white flex items-center justify-between px-1 md:px-3 z-10 sticky'>
+            className='bg-black h-20 w-full top-0 shadow-2xl hover:shadow-blue-700 text-white flex items-center justify-between px-1 md:px-3 z-10 sticky'>
 
             <img src={logo} alt="logo" className='object-cover h-20 w-20 hover:border-white rounded-full border-2 border-blue-600 cursor-pointer transition-all duration-300' onClick={() => navigate('/')} />
 
             <div className='hidden md:flex items-center justify-center gap-5'>
-                <Button text='Home' onClick={handleHome} />
-                <Button text='Categories' onClick={handleCategories} />
-                <Button text='Shop' onClick={handleShop} />
-                <Button text='Orders' onClick={handleOrders} />
+                <Button text='Home' onClick={() => { navigate('/'); setActivePage("Home") }} />
+                <Button text='Categories' onClick={() => { navigate('/category'); setActivePage("Categories") }} />
+                <Button text='Shop' onClick={() => { navigate('/shop'); setActivePage("Shop") }} />
+                <Button text='Orders' onClick={() => { navigate('/orders'); setActivePage("Orders") }} />
             </div>
             <div className='flex items-center justify-center gap-5'>
                 <Icon icon={<IoSearchSharp />} onClick={handleSearch} />
                 <Icon icon={<RiCustomerServiceFill onClick={() => navigate('/support')} />} />
                 <img ref={logoRef} src={logo} alt="profile" onClick={handleProfile} className='hidden md:block object-cover h-12 w-12 rounded-full border-2 border-blue-600 cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500' />
                 <div className='relative'>
-                    <Icon icon={<BsCartCheckFill onClick={()=>{userdata? navigate('/cart-page') : navigate('/login')}} />} />
-                        {cart?.length > 0 && <p className='bg-blue-700 h-6 w-6 rounded-full absolute top-0 right-0 text-center cursor-pointer' onClick={()=>navigate('/cart-page')}>{cart?.length}</p>
-}
+                    <Icon icon={<BsCartCheckFill onClick={() => { userdata ? navigate('/cart-page') : navigate('/login') }} />} />
+                    {cart?.length > 0 && <p className='bg-blue-700 h-6 w-6 rounded-full absolute top-0 right-0 text-center cursor-pointer' onClick={() => navigate('/cart-page')}>{cart?.length}</p>
+                    }
                 </div>
                 <Icon icon={openMenu ? <ImCross /> : <GiHamburgerMenu />} css='md:hidden' onClick={() => setOpenMenu((pre) => !pre)} />
 
@@ -157,20 +145,20 @@ const Navbar = () => {
 
                 <div>
                     <p>Enter Your Username or EmailId</p>
-                    <input type="text" name='loginKey' onChange={handleChange} placeholder='Enter Your Username or EmailId' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
+                    <input type="text" name='loginKey' onChange={handleChange} placeholder='Enter Your Username or EmailId' className='w-75 h-10 rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-5 hover:border-4 hover:border-black transition-all duration-500' />
                 </div>
                 <div>
                     <p>Enter Your Full Name</p>
-                    <input type="text" name='fullName' onChange={handleChange} placeholder='Enter Your Name' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
+                    <input type="text" name='fullName' onChange={handleChange} placeholder='Enter Your Name' className='w-75 h-10 rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-5 hover:border-4 hover:border-black transition-all duration-500' />
                 </div>
 
                 <div>
                     <p>Enter Your Phone Number</p>
-                    <input type="text" name='phone' onChange={handleChange} placeholder='Enter Your Phone Number' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
+                    <input type="text" name='phone' onChange={handleChange} placeholder='Enter Your Phone Number' className='w-75 h-10 rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-5 hover:border-4 hover:border-black transition-all duration-500' />
                 </div>
                 <div>
                     <p>Enter Your Password</p>
-                    <input type="text" name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-[300px] h-[40px] rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-[20px] hover:border-4 hover:border-black transition-all duration-500' />
+                    <input type="text" name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-75 h-10 rounded-full outline-none border-4 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-5 hover:border-4 hover:border-black transition-all duration-500' />
                 </div>
                 <Button text='Update Details' css='h-10 bg-green-700 transition-transform duration-150 active:scale-95 hover:scale-105' onClick={handleUpdate} />
                 <Button text='Logout' css='h-10 bg-green-700 transition-transform duration-150 active:scale-95 hover:scale-105' onClick={handleLogOut} />
@@ -183,9 +171,10 @@ const Navbar = () => {
 }
 
 const Button = ({ text, onClick, css = '' }) => {
+    const { activePage, setActivePage } = useContext(userDataContext)
     return (
 
-        <button className={`${css} bg-gray-500 p-1 px-3 rounded-full cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500`} onClick={onClick}>{text}</button>
+        <button className={`${css} ${activePage == text ? "bg-gray-800 " : ""} bg-gray-500 p-1 px-3 rounded-full cursor-pointer hover:bg-gray-800 shadow-sm hover:shadow-blue-700 transition-all duration-500`} onClick={onClick}>{text}</button>
 
     )
 }

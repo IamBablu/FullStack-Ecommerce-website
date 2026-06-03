@@ -9,8 +9,7 @@ import axios from 'axios'
   
 
 const VendorDashboard = () => {
-  const {serverUrl, userdata, setUserData, products, setProducts} = useContext(userDataContext)
-  const [activePage, setActivePage] = useState('dashboard')
+  const {serverUrl, userdata, setUserData, products, setProducts, activePage, setActivePage} = useContext(userDataContext)
 
   const renderPage = ()=> {
     switch (activePage) {
@@ -31,6 +30,7 @@ const VendorDashboard = () => {
   }
 
   useEffect(()=>{
+    setActivePage("dashboard")
     getProducts();
   },[]);
 

@@ -10,6 +10,7 @@ export const UserContext = ({children}) => {
   const [products, setProducts] = useState(null)
   const [cart, setCart] = useState([])
   const [loading, setLoading] = useState(false)
+  const [activePage, setActivePage] = useState('')
 
   const getCurrentUser = async () =>{
     try {
@@ -67,7 +68,9 @@ export const UserContext = ({children}) => {
     setCart,
     editToCartGlobal,
     loading,
-    setLoading
+    setLoading,
+    activePage,
+    setActivePage
   }
 
   return (

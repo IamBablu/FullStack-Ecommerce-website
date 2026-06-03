@@ -1,6 +1,7 @@
 import { ApiError } from "../utils/ApiError.js";
 import { AsyncHandler } from "../utils/AsyncHandler.js";
 import { User } from "../models/user.model.js";
+import { Order } from "../models/order.model.js";
 import { Product } from "../models/product.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -39,16 +40,35 @@ const verifyVendor = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, verifiedVendor, "Vendor updated successfully"));
 });
 
+// Get all vendors (admin only)
 const getVendors = AsyncHandler(async (req, res) => {
-  const user = req.user;
-  if (!user) throw new ApiError(403, "UnAuthorized request");
-  const admin = await User.findById(user._id);
-  if (admin.role !== "Admin") throw new ApiError(400, "Admin not found");
-  const vendors = await User.find({ role: "Vendor" });
-  if (!vendors) throw new ApiError(400, "Vendors not found");
-  return res
-    .status(200)
-    .json(new ApiResponse(200, vendors, "Vendors getting successful"));
+    // Check if user is admin
+    if (req.user.role !== 'Admin') {
+        throw new ApiError(403, "Unauthorized access. Admin only.");
+    }
+
+    const vendors = await User.find({ role: 'Vendor' })
+        .select('-password -refreshToken')
+        .sort({ createdAt: -1 });
+
+    // Get additional statistics for each vendor
+    const vendorsWithStats = await Promise.all(vendors.map(async (vendor) => {
+        const products = await Product.find({ vendor: vendor._id });
+        const orders = await Order.find({ productVendor: vendor._id });
+        const deliveredOrders = orders.filter(o => o.orderStatus === 'delivered');
+        const totalRevenue = deliveredOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+
+        return {
+            ...vendor.toObject(),
+            totalProducts: products.length,
+            totalOrders: orders.length,
+            totalRevenue: totalRevenue
+        };
+    }));
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, vendorsWithStats, "All vendors fetched successfully"));
 });
 
 const getAllProduct = AsyncHandler(async (req, res) => {

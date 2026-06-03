@@ -11,7 +11,7 @@ const Sidebar = ({ activePage, setActivePage }) => {
   const menu = [
     { id: "dashboard", label: "Dashboard", icon: <MdDashboard size={22}/> },
     { id: "orders", label: "Orders", icon: <FaShoppingBag size={22}/> },
-    { id: "products", label: "products", icon: <FaBox size={22}/> }
+    { id: "products", label: "Products", icon: <FaBox size={22}/> }
   ]
 
 

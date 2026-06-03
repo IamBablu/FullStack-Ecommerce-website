@@ -4,6 +4,7 @@ import cors from 'cors'
 import UserRoutes from './src/routes/user.route.js'
 import AdminRoutes from './src/routes/admin.route.js'
 import ProductRoutes from './src/routes/product.route.js'
+import OrderRoutes from './src/routes/order.route.js'
 
 const app = express()
 
@@ -21,6 +22,8 @@ app.use(cookieParser())
 app.use("/api/v1/users", UserRoutes)
 app.use("/api/v1/admin", AdminRoutes)
 app.use("/api/v1/product", ProductRoutes)
+app.use("/api/v1/order", OrderRoutes)
+
 
 
 app.use((err, req, res, next) => {

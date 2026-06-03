@@ -16,13 +16,12 @@ import PendingVendor from '../components/vendor/PendingVendor'
 import RejectedVendor from '../components/vendor/RejectedVendor'
 
 const Home = () => {
-    const [activePageAdmin, setActivePageAdmin] = useState('dashboard')
   const navigate = useNavigate()
   const {serverUrl, userdata, setUserData} = React.useContext(userDataContext)
   const panel = userdata?.role || 'User';
   const renderComponent = () =>{
     switch (panel) {
-      case "Admin" : return (<><AdminNavbar activePageAdmin={activePageAdmin} setActivePageAdmin={setActivePageAdmin}/> <AdminDashboard activePageAdmin={activePageAdmin} setActivePageAdmin={setActivePageAdmin}/> <AdminFooter /> </>)
+      case "Admin" : return (<><AdminNavbar /> <AdminDashboard /> <AdminFooter /> </>)
       case "Vendor" : 
         if(userdata?.verificationStatus == 'Pending'){
           return (<><VendorNavbar /> <PendingVendor /></>)

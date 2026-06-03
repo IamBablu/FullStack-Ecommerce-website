@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import image1 from '../../assets/image1.jpg'
 import image2 from '../../assets/image2.webp'
 import image3 from '../../assets/image3.webp'
@@ -6,9 +6,11 @@ import { motion, AnimatePresence } from 'motion/react'
 import { IoCaretBack } from "react-icons/io5";
 import { IoCaretForwardOutline } from "react-icons/io5";
 import ProductSection from './ProductSection'
+import { userDataContext } from '../../context/UserContext'
 
 
 const Dashboard = () => {
+  const {setActivePage} = useContext(userDataContext)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [currenCategoryIndex, setCurrentCategoryIndex] = useState(0)
   const [currenCategoryIndexSm, setCurrentCategoryIndexSm] = useState(0)
@@ -51,6 +53,7 @@ const Dashboard = () => {
   ];
 
   useEffect(() => {
+    setActivePage("Home")
     const interval = setInterval(() => {
       setCurrentIndex(pre => pre === slides.length - 1 ? 0 : pre + 1)
       setCurrentCategoryIndex(pre => pre === 0 ? 5 : 0)

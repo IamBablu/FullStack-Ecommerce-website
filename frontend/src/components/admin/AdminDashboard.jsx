@@ -11,8 +11,8 @@ import axios from 'axios'
 
   
 
-const AdminDashboard = ({activePageAdmin, setActivePageAdmin}) => {
-  const {serverUrl, vendors, setVendors, products, setProducts} = React.useContext(userDataContext) 
+const AdminDashboard = () => {
+  const {serverUrl, vendors, setVendors, products, setProducts, activePage, setActivePage} = React.useContext(userDataContext) 
 
 
  const getVendors = async()=> {
@@ -45,7 +45,7 @@ const AdminDashboard = ({activePageAdmin, setActivePageAdmin}) => {
 
 
   const renderPage = ()=> {
-    switch (activePageAdmin) {
+    switch (activePage) {
       case 'vendors': return <VendorDetails />
       case 'orders': return <UserOrders />
       case 'vendor-approval': return <VendorApproval />
@@ -57,7 +57,7 @@ const AdminDashboard = ({activePageAdmin, setActivePageAdmin}) => {
 
   return (
     <div className='flex justify-end h-screen w-screen pt-20'>
-        <Sidebar activePageAdmin={activePageAdmin} setActivePageAdmin={setActivePageAdmin} css='hidden md:block'/>
+        <Sidebar activePage={activePage} setActivePage={setActivePage} css='hidden md:block'/>
       <div className='md:w-[80%]'>
       {renderPage()}
       </div>
