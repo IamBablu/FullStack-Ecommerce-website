@@ -1,31 +1,27 @@
 import React, { useState } from 'react'
-import { frameData, motion } from "motion/react"
+import { motion, AnimatePresence } from "motion/react"
 import { TbPlayerTrackNextFilled } from "react-icons/tb";
+import { MdEmail, MdLock, MdPerson, MdStore, MdLocationOn, MdGppGood, MdVerified, MdArrowBack, MdCheckCircle } from "react-icons/md";
+import { FaEye, FaEyeSlash, FaUser, FaStore, FaBuilding, FaGoogle, FaFacebook, FaApple } from "react-icons/fa";
 import Button from '../components/Button';
 import Rolebox from '../components/Rolebox';
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
 import logo from '../assets/logo.jpeg'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { userDataContext } from '../context/UserContext';
 
-
-
-
-
 const Signup = () => {
     const navigate = useNavigate();
     const { userdata, setUserData, serverUrl } = React.useContext(userDataContext)
-    // To go for registration page from choose role 
     const [confirmRole, setConfirmRole] = useState(false)
     const [error, setError] = useState("")
+    const [success, setSuccess] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [otpSending, setOtpSending] = useState(false)
     const [sentOtp, setSentOtp] = useState(false)
     const [otpAttempt, setOtpAttempt] = useState(0)
-
+    const [verifyingOtp, setVerifyingOtp] = useState(false)
 
     const [formData, setFormData] = useState({
         username: "",
@@ -39,12 +35,11 @@ const Signup = () => {
         gstNumber: "",
     })
 
-
     const handleChange = (e) => {
         setError("");
-        setLoading(false)
+        setSuccess("");
         let { name, value } = e.target;
-        if (name == 'email' || name == "username") value = value.toLowerCase();
+        if (name === 'email' || name === "username") value = value.toLowerCase();
         setFormData({
             ...formData,
             [name]: value
@@ -52,158 +47,497 @@ const Signup = () => {
     }
 
     const handleSendOtp = async (e) => {
+        e.preventDefault();
+        if (!formData.email) {
+            setError("Please enter your email address first");
+            return;
+        }
+
         setOtpSending(true)
-        e.preventDefault()
         try {
             await axios.post(`${serverUrl}/users/send-otp`, { email: formData.email }, { withCredentials: true })
-            setOtpAttempt(1)
+            setOtpAttempt(prev => prev + 1)
             setSentOtp(true);
-            setOtpSending(false)
-
+            setSuccess("OTP sent successfully! Check your email.");
+            setTimeout(() => setSuccess(""), 3000);
         } catch (error) {
-            setError(error.message);
+            setError(error.response?.data?.message || "Failed to send OTP. Please try again.");
             console.error(error)
+        } finally {
             setOtpSending(false)
         }
     }
 
+    const handleVerifyOtp = async () => {
+        if (!formData.otp) {
+            setError("Please enter the OTP");
+            return;
+        }
+
+        setVerifyingOtp(true);
+        try {
+            await axios.post(`${serverUrl}/users/verify-otp`, { email: formData.email, otp: formData.otp }, { withCredentials: true });
+            setSuccess("OTP verified successfully!");
+            setTimeout(() => setSuccess(""), 2000);
+            return true;
+        } catch (error) {
+            setError(error.response?.data?.message || "Invalid OTP. Please try again.");
+            return false;
+        } finally {
+            setVerifyingOtp(false);
+        }
+    }
 
     const handleSignup = async (e) => {
-        setLoading(true)
         e.preventDefault();
+
+        if (!formData.otp) {
+            setError("Please verify your email with OTP");
+            return;
+        }
+
+        setLoading(true)
         try {
             const result = await axios.post(`${serverUrl}/users/signup`, formData, { withCredentials: true })
             setUserData(result.data);
             navigate("/")
-            setLoading(true)
             window.location.reload();
         } catch (error) {
             setUserData(null)
             console.error(error)
-            setError(error.message)
+            setError(error.response?.data?.message || "Registration failed. Please try again.")
             setLoading(false)
         }
     }
 
+    const handleBackToRole = () => {
+        setConfirmRole(false);
+        setFormData({
+            username: "",
+            otp: "",
+            email: "",
+            password: "",
+            fullName: "",
+            role: "",
+            shopName: "",
+            shopAddress: "",
+            gstNumber: "",
+        });
+        setSentOtp(false);
+        setOtpAttempt(0);
+    }
 
     return (
-        <div className='text-white h-screen w-full bg-linear-to-b from-blue-950 to-black flex justify-center items-center relative'>
-
-            <div className='lg:hidden h-26 w-full bg-black absolute top-0 left-0 flex items-center justify-around'>
-                <img className='w-24 h-24 rounded-full' src={logo} alt="" />
-                <div className='text-center'>
-                    <p className='text-2xl text-gray-200 font-semibold'>WellCome To</p>
-                    <p className='text-2xl text-blue-400 font-semibold'> My Cart</p>
-                </div>
-                <div>
-                    <Button text='Login' bgColor='bg-red-500 text-xl font-semibold w-[90px]' onClick={() => navigate("/login")} />
-                </div>
+        <div className='min-h-screen w-full bg-gradient-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center p-4 relative overflow-y-auto'>
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-1000"></div>
             </div>
 
-            {!confirmRole && <motion.div
-                initial={{ scale: 0, opacity: 0, y: 200 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, type: "spring" }}
-                className='w-100 bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-4'>
-                <h1 className='text-3xl'>Choose Your <span className='text-blue-300'>Role</span></h1>
-                <div className='flex gap-4 '>
-                    <Rolebox text='User'
-                        isSelected={formData.role == "User"}
-                        img='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGWm7kgMH1PEsycRwkyqPcPB1b2NITpD8j2g&s'
-                        onClick={() => setFormData({ ...formData, role: "User" })} />
-
-
-                    <Rolebox text='Vendor'
-                        isSelected={formData.role == "Vendor"}
-                        img='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkR0f_N-QMbb0JNreYa_vuG5EcprlYRshSOw&s'
-                        onClick={() => setFormData({ ...formData, role: "Vendor" })} />
-
-
-                    <Rolebox text='Admin'
-                        isSelected={formData.role == "Admin"}
-                        img='https://img.freepik.com/free-vector/business-user-cog_78370-7040.jpg?semt=ais_hybrid&w=740&q=80'
-                        onClick={() => setFormData({ ...formData, role: "Admin" })} />
+            {/* Mobile Header */}
+            <div className='lg:hidden fixed top-0 left-0 right-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-between px-4 py-2'>
+                <img className='w-12 h-12 rounded-full object-cover' src={logo} alt="Logo" />
+                <div className='text-center'>
+                    <p className='text-sm text-gray-200 font-semibold'>Welcome To</p>
+                    <p className='text-lg text-blue-400 font-semibold'>My Cart</p>
                 </div>
-                < Button text={<span className='flex items-center justify-center gap-1 '>Next <TbPlayerTrackNextFilled /></span>}
-                    bgColor="bg-green-600 w-[300px]"
-                    onClick={() => {
-                        if (formData.role) setConfirmRole(true)
-                        else setError("first choose role!")
-                    }} />
-                <p className='cursor-pointer hover:underline' onClick={() => navigate("/login")}>Already have an account <span className='text-blue-500'>Login</span></p>
-            </motion.div>}
+                <Button
+                    text='Login'
+                    bgColor='bg-gradient-to-r from-blue-600 to-indigo-600 text-sm font-semibold px-4 py-1'
+                    onClick={() => navigate("/login")}
+                />
+            </div>
 
-            {confirmRole && <motion.div
-                initial={{ scale: 0, opacity: 0, y: 200 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, type: "spring" }}
-                className='bg-black hover:shadow-2xl shadow-xl shadow-blue-600 rounded-2xl flex items-center flex-col gap-4 p-8 '>
-                <h1 className='text-3xl'>Register to <span className='text-blue-300'>MyCart</span></h1>
-                {error && <p className='text-red-600'>{error}</p>}
-                <form className='flex flex-col gap-2' onSubmit={handleSignup}>
+            <div className='w-full max-w-2xl'>
+                <AnimatePresence mode="wait">
+                    {!confirmRole ? (
+                        <motion.div
+                            key="role-selection"
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                            transition={{ duration: 0.5, type: "spring" }}
+                            className='bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'
+                        >
+                            <div className='text-center pt-8 pb-4'>
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: 0.2, type: "spring" }}
+                                    className='inline-block'
+                                >
+                                    <div className='w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg'>
+                                        <span className='text-3xl font-bold text-white'>MC</span>
+                                    </div>
+                                </motion.div>
+                                <motion.h1
+                                    initial={{ y: -20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    className='text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent'
+                                >
+                                    Choose Your Role
+                                </motion.h1>
+                                <p className='text-gray-400 text-sm mt-2'>Select how you want to use MyCart</p>
+                            </div>
 
-                    <div className='h-100 overflow-y-auto /* 1. Set the width */
-            [&::-webkit-scrollbar]:w-1.5
-            
-            /* 2. Track (Background) - Keep it dark/subtle */
-            [&::-webkit-scrollbar-track]:bg-slate-900
-            
-            /* 3. Thumb (The handle) - Make it stand out */
-            [&::-webkit-scrollbar-thumb]:bg-slate-700
-            [&::-webkit-scrollbar-thumb]:rounded-full
-            
-            /* 4. Hover effect for the handle */
-            hover:[&::-webkit-scrollbar-thumb]:bg-blue-500
-            active:[&::-webkit-scrollbar-thumb]:bg-blue-400">'>
-                        <p className='text-lg '>Enter Your Full Name</p>
-                        <input required type="text" name='fullName' onChange={handleChange} placeholder='Enter Your Name' className='w-100 rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
-                        <p className='text-lg '>Enter Your Username</p>
-                        <input required type="text" name='username' onChange={handleChange} placeholder='Enter Your User Name' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
-                        <div className='relative'>
-                            <p className='text-lg '>Enter Your Email Id</p>
-                            <input required type="email" name='email' onChange={handleChange} placeholder='Enter Your Email Id' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
-                            < Button
-                                text={otpSending ? 'sending' : (otpAttempt > 0 ? "resend" : "send")}
-                                bgColor="bg-green-600 w-[100px] absolute top-8 right-0 border-2 border-x-blue-500"
-                                onClick={handleSendOtp}
-                                disable={loading} />
-                        </div>
-                        {sentOtp && <div>
-                            <p className='text-lg '>Enter Otp</p>
-                            <input required type="text" name='otp' onChange={handleChange} placeholder='Enter Your Otp' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
-                        </div>}
-                        <p className='text-lg '>Enter Your Password</p>
-                        <div className='relative'>
-                            <input required type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} placeholder='Enter Your Password' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
-                            {!showPassword ? (<FaEye className='text-xl absolute top-5 right-5 cursor-pointer' onClick={() => setShowPassword(true)} />) : (<FaEyeSlash className='text-xl absolute top-5 right-5 cursor-pointer' onClick={() => setShowPassword(false)} />)}
+                            <div className='px-6 pb-8'>
+                                {error && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className='mb-4 bg-red-500/10 border border-red-500/50 rounded-lg p-3'
+                                    >
+                                        <p className='text-red-400 text-sm text-center'>{error}</p>
+                                    </motion.div>
+                                )}
 
-                        </div>
-                        {formData.role == 'Vendor' &&
-                            <div>
+                                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'>
+                                    <Rolebox
+                                        text='User'
+                                        isSelected={formData.role === "User"}
+                                        img='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGWm7kgMH1PEsycRwkyqPcPB1b2NITpD8j2g&s'
+                                        onClick={() => {
+                                            setFormData({ ...formData, role: "User" });
+                                            setError("");
+                                        }}
+                                    />
+                                    <Rolebox
+                                        text='Vendor'
+                                        isSelected={formData.role === "Vendor"}
+                                        img='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkR0f_N-QMbb0JNreYa_vuG5EcprlYRshSOw&s'
+                                        onClick={() => {
+                                            setFormData({ ...formData, role: "Vendor" });
+                                            setError("");
+                                        }}
+                                    />
+                                    <Rolebox
+                                        text='Admin'
+                                        isSelected={formData.role === "Admin"}
+                                        img='https://img.freepik.com/free-vector/business-user-cog_78370-7040.jpg?semt=ais_hybrid&w=740&q=80'
+                                        onClick={() => {
+                                            setFormData({ ...formData, role: "Admin" });
+                                            setError("");
+                                        }}
+                                    />
+                                </div>
 
-                                <p className='text-lg '>Enter Your Shop Name</p>
-                                <input type="text" name='shopName' onChange={handleChange} placeholder='Enter Your Shop Name' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
+                                <Button
+                                    text={<span className='flex items-center justify-center gap-2'>Next <TbPlayerTrackNextFilled /></span>}
+                                    bgColor="bg-gradient-to-r from-blue-600 to-indigo-600 w-full"
+                                    onClick={() => {
+                                        if (formData.role) {
+                                            setConfirmRole(true);
+                                            setError("");
+                                        } else {
+                                            setError("Please select a role to continue!");
+                                        }
+                                    }}
+                                />
 
+                                <div className='text-center mt-6'>
+                                    <button onClick={() => navigate("/login")} className='text-gray-400 text-sm'>
+                                        Already have an account?{' '}
+                                        <span
 
-                                <p className='text-lg '>Enter Your Shop Address</p>
-                                <input type="text" name='shopAddress' onChange={handleChange} placeholder='Enter Your Shop Address' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
+                                            className='text-blue-400 font-semibold hover:underline'
+                                        >
+                                            Login
+                                        </span>
+                                    </button>
+                                </div>
 
+                                {/* Social Signup Options */}
+                                {/* <div className='mt-6'>
+                                    <div className='relative my-4'>
+                                        <div className='absolute inset-0 flex items-center'>
+                                            <div className='w-full border-t border-gray-700'></div>
+                                        </div>
+                                        <div className='relative flex justify-center text-sm'>
+                                            <span className='px-3 bg-gray-800/90 text-gray-400'>Or sign up with</span>
+                                        </div>
+                                    </div>
+                                    <div className='grid grid-cols-3 gap-3'>
+                                        <button className='py-2 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2'>
+                                            <FaGoogle className='text-red-400' />
+                                            <span className='text-sm hidden sm:inline'>Google</span>
+                                        </button>
+                                        <button className='py-2 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2'>
+                                            <FaFacebook className='text-blue-400' />
+                                            <span className='text-sm hidden sm:inline'>Facebook</span>
+                                        </button>
+                                        <button className='py-2 bg-gray-700/50 rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center gap-2'>
+                                            <FaApple className='text-white' />
+                                            <span className='text-sm hidden sm:inline'>Apple</span>
+                                        </button>
+                                    </div>
+                                </div> */}
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="registration-form"
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: -20 }}
+                            transition={{ duration: 0.5, type: "spring" }}
+                            className='bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'
+                        >
+                            {/* Back Button */}
+                            <div className='px-6 pt-4'>
+                                <button
+                                    onClick={handleBackToRole}
+                                    className='flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors cursor-pointer'
+                                >
+                                    <MdArrowBack className='text-xl' />
+                                    <span className='text-sm'>Back to role selection</span>
+                                </button>
+                            </div>
 
-                                <p className='text-lg '>Enter Your Gst Number</p>
-                                <input type="text" name='gstNumber' onChange={handleChange} placeholder='Enter Your Gst Number' className='w-full rounded-full outline-none border-2 border-x-blue-500 bg-transparent text-white placeholder-gray-400 text-xl p-2 hover:border-blue-950' />
+                            <div className='text-center pt-4 pb-2'>
+                                <h1 className='text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent'>
+                                    Create Account
+                                </h1>
+                                <p className='text-gray-400 text-sm'>Join as a {formData.role}</p>
+                            </div>
 
-                            </div>}
-                    </div>
-                    < Button type='submit'
-                        text={loading ? "Registering...." : <span className='flex items-center justify-center gap-1 '>Register <TbPlayerTrackNextFilled className='mt-2' /></span>}
-                        bgColor="bg-green-600 w-full"
-                        disable={loading} />
-                </form>
-                <p className='cursor-pointer hover:underline' onClick={() => navigate("/login")}>Already have an account <span className='text-blue-500'>Login</span></p>
+                            <div className='px-6 pb-8'>
+                                {/* Messages */}
+                                <AnimatePresence>
+                                    {error && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className='mb-4 bg-red-500/10 border border-red-500/50 rounded-lg p-3'
+                                        >
+                                            <p className='text-red-400 text-sm text-center'>{error}</p>
+                                        </motion.div>
+                                    )}
+                                    {success && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className='mb-4 bg-green-500/10 border border-green-500/50 rounded-lg p-3'
+                                        >
+                                            <p className='text-green-400 text-sm text-center flex items-center justify-center gap-2'>
+                                                <MdCheckCircle />
+                                                {success}
+                                            </p>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
 
-            </motion.div>}
+                                <form onSubmit={handleSignup} className='space-y-4'>
+                                    <div className='max-h-96 overflow-y-auto custom-scrollbar pr-2 space-y-4'>
+                                        {/* Full Name */}
+                                        <div>
+                                            <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
+                                                <MdPerson className='text-blue-400' />
+                                                Full Name
+                                            </label>
+                                            <input
+                                                required
+                                                type="text"
+                                                name='fullName'
+                                                value={formData.fullName}
+                                                onChange={handleChange}
+                                                placeholder='Enter your full name'
+                                                className='w-full px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all'
+                                            />
+                                        </div>
 
+                                        {/* Username */}
+                                        <div>
+                                            <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
+                                                <FaUser className='text-blue-400' />
+                                                Username
+                                            </label>
+                                            <input
+                                                required
+                                                type="text"
+                                                name='username'
+                                                value={formData.username}
+                                                onChange={handleChange}
+                                                placeholder='Choose a username'
+                                                className='w-full px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all'
+                                            />
+                                        </div>
 
+                                        {/* Email with OTP */}
+                                        <div>
+                                            <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
+                                                <MdEmail className='text-blue-400' />
+                                                Email Address
+                                            </label>
+                                            <div className='flex gap-2'>
+                                                <input
+                                                    required
+                                                    type="email"
+                                                    name='email'
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                    placeholder='Enter your email'
+                                                    className='flex-1 px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all'
+                                                    disabled={sentOtp}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={handleSendOtp}
+                                                    disabled={otpSending || !formData.email}
+                                                    className='px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg text-white font-medium hover:from-green-700 hover:to-emerald-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap cursor-pointer'
+                                                >
+                                                    {otpSending ? 'Sending...' : (otpAttempt > 0 ? 'Resend OTP' : 'Send OTP')}
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* OTP Verification */}
+                                        {sentOtp && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                className='space-y-2'
+                                            >
+                                                <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
+                                                    <MdVerified className='text-green-400' />
+                                                    Verification Code
+                                                </label>
+                                                <div className='flex gap-2'>
+                                                    <input
+                                                        required
+                                                        type="text"
+                                                        name='otp'
+                                                        value={formData.otp}
+                                                        onChange={handleChange}
+                                                        placeholder='Enter 6-digit OTP'
+                                                        className='flex-1 px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all'
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleVerifyOtp}
+                                                        disabled={verifyingOtp || !formData.otp}
+                                                        className='px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg text-white font-medium hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-50'
+                                                    >
+                                                        {verifyingOtp ? 'Verifying...' : 'Verify'}
+                                                    </button>
+                                                </div>
+                                            </motion.div>
+                                        )}
+
+                                        {/* Password */}
+                                        <div>
+                                            <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
+                                                <MdLock className='text-blue-400' />
+                                                Password
+                                            </label>
+                                            <div className='relative'>
+                                                <input
+                                                    required
+                                                    type={showPassword ? 'text' : 'password'}
+                                                    name='password'
+                                                    value={formData.password}
+                                                    onChange={handleChange}
+                                                    placeholder='Create a strong password'
+                                                    className='w-full px-4 py-2 pr-12 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all'
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-400'
+                                                >
+                                                    {!showPassword ? <FaEye /> : <FaEyeSlash />}
+                                                </button>
+                                            </div>
+                                            <p className='text-gray-500 text-xs mt-1'>Minimum 8 characters with letters and numbers</p>
+                                        </div>
+
+                                        {/* Vendor Specific Fields */}
+                                        {formData.role === 'Vendor' && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                className='space-y-4 border-t border-gray-700 pt-4'
+                                            >
+                                                <h3 className='text-md font-semibold text-white flex items-center gap-2'>
+                                                    <FaStore className='text-purple-400' />
+                                                    Business Information
+                                                </h3>
+
+                                                <div>
+                                                    <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
+                                                        <MdStore className='text-purple-400' />
+                                                        Shop Name
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name='shopName'
+                                                        value={formData.shopName}
+                                                        onChange={handleChange}
+                                                        placeholder='Enter your shop/business name'
+                                                        className='w-full px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all'
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
+                                                        <MdLocationOn className='text-purple-400' />
+                                                        Shop Address
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name='shopAddress'
+                                                        value={formData.shopAddress}
+                                                        onChange={handleChange}
+                                                        placeholder='Enter your shop address'
+                                                        className='w-full px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all'
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
+                                                        <MdGppGood className='text-purple-400' />
+                                                        GST Number (Optional)
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name='gstNumber'
+                                                        value={formData.gstNumber}
+                                                        onChange={handleChange}
+                                                        placeholder='Enter GST number'
+                                                        className='w-full px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-all'
+                                                    />
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <Button
+                                        type='submit'
+                                        text={loading ? "Creating Account..." : <span className='flex items-center justify-center gap-2'>Create Account <TbPlayerTrackNextFilled /></span>}
+                                        bgColor="bg-gradient-to-r from-blue-600 to-indigo-600 w-full"
+                                        disable={loading || (sentOtp && !formData.otp)}
+                                    />
+                                </form>
+
+                                <div className='text-center mt-6'>
+                                    <button onClick={() => navigate("/login")} className='text-gray-400 text-sm cursor-pointer'>
+                                        Already have an account?{' '}
+                                        <span
+
+                                            className='text-blue-400 font-semibold hover:underline'
+                                        >
+                                            Login
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
     )
 }

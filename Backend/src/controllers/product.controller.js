@@ -163,6 +163,7 @@ const getMyProduct = AsyncHandler(async (req, res) => {
 });
 
 const getUserProduct = AsyncHandler(async (req, res) => {
+  console.log("fired")
   const products = await Product.find({
     verificationStatus: "Approved",
     isActive: true,

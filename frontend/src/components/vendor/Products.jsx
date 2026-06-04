@@ -96,7 +96,7 @@ const Products = () => {
             <p className='text-gray-400 mt-2'>Manage and track all your products</p>
           </div>
           <button 
-            className='bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg font-semibold flex items-center gap-2'
+            className='bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg font-semibold flex items-center gap-2 cursor-pointer'
             onClick={() => navigate('/add-product')}
           >
             <svg className='w-5 h-5' fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -11,12 +11,10 @@ const Orders = () => {
   const [trackOrder, setTrackOrder] = useState(null);
 
   useEffect(() => {
-    console.log("fired...")
     setActivePage("Orders")
     const getUserData = async () => {
       try {
         const result = await axios.get(`${serverUrl}/order/get-user-order`, { withCredentials: true })
-        console.log("useeffect: ", result.data.data)
         setOrders(result?.data?.data)
       } catch (error) {
         console.error(error)
@@ -77,7 +75,7 @@ const Orders = () => {
       {/* Order Status Timeline - Vertical Style */}
       <div className="bg-gray-800 rounded-lg px-6 py-2 border border-gray-700">
         <h3 className="text-lg font-semibold text-white mb-2">Order Status</h3>
-        <div className="space-y-0">
+        <div className="space-x-0 flex">
           {statusSteps.map((step, index) => {
             const isCompleted = index <= currentStatusIndex;
             const isCurrent = index === currentStatusIndex;
@@ -86,9 +84,9 @@ const Orders = () => {
             if ((trackOrder?.orderStatus?.toLowerCase() === 'returned' || trackOrder?.orderStatus?.toLowerCase() === 'canceled') && index > currentStatusIndex) return null;
             
             return (
-              <div key={step} className="flex items-start gap-4">
+              <div key={step} className="flex flex-col items-start gap-4">
                 {/* Status Circle with Line */}
-                <div className="flex flex-col items-center">
+                <div className="flex items-center">
                   <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300
                     ${getStatusBgColor(index)}
                     ${isCurrent ? 'ring-4 ring-blue-500 ring-opacity-30 scale-110' : ''}`}>
@@ -102,7 +100,7 @@ const Orders = () => {
                   </div>
                   {/* Connecting Line */}
                   {index < statusSteps.length - 1 && (
-                    <div className={`w-0.5 h-2 mt-1 transition-all duration-300 
+                    <div className={`w-18 h-0.5 mt-1 transition-all duration-300 
                       ${index < currentStatusIndex ? 'bg-blue-500' : 'bg-gray-600'}`} />
                   )}
                 </div>
