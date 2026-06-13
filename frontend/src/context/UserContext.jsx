@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 export const userDataContext = React.createContext();
 
 export const UserContext = ({children}) => {
-  const serverUrl = 'http://localhost:8000/api/v1';
+  const serverUrl = 'https://fullstack-ecommerce-website-backend-4yno.onrender.com/api/v1';
   const [userdata, setUserData] = useState(null)
   const [vendors, setVendors] = useState(null)
   const [products, setProducts] = useState(null)
