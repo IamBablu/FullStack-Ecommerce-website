@@ -4,13 +4,12 @@ import { userDataContext } from '../../context/UserContext'
 import axios from 'axios'
 
 const Products = () => {
-  const { serverUrl, userdata, setUserData, products, setProducts } = useContext(userDataContext)
+  const { serverUrl, userdata, setUserData, products, setProducts, loading, setLoading } = useContext(userDataContext)
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState("Pending")
   const [searchTerm, setSearchTerm] = useState('')
   const [filteredProducts, setFilteredProducts] = useState([])
   const [stats, setStats] = useState({ pending: 0, approved: 0, rejected: 0 })
-  const [loading, setLoading] = useState(false)
 
   // Sort products by creation date
   useEffect(() => {
@@ -85,18 +84,18 @@ const Products = () => {
   }
 
   return (
-    <div className='h-full overflow-y-scroll scroll-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black'>
-      <div className='container mx-auto px-4 py-8'>
+    <div className='h-full overflow-y-scroll scroll-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black'>
+      <div className='container lg:mx-auto px-4 py-2'>
         {/* Header Section */}
-        <div className='flex flex-col md:flex-row justify-between items-center mb-8 gap-4'>
+        <div className='flex flex-col md:flex-row justify-between items-center mb-2 gap-4'>
           <div>
-            <h1 className='text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'>
+            <h1 className='text-4xl font-bold bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent'>
               My Products
             </h1>
             <p className='text-gray-400 mt-2'>Manage and track all your products</p>
           </div>
           <button 
-            className='bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg font-semibold flex items-center gap-2 cursor-pointer'
+            className='bg-linear-to-r from-blue-500 to-blue-600 px-6 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg font-semibold flex items-center gap-2 cursor-pointer'
             onClick={() => navigate('/add-product')}
           >
             <svg className='w-5 h-5' fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,12 +107,12 @@ const Products = () => {
 
 
         {/* Tabs & Search */}
-        <div className='flex flex-col md:flex-row justify-between items-center gap-4 mb-6'>
-          <div className='flex flex-wrap gap-3'>
+        <div className='flex flex-col md:flex-row justify-between items-center gap-4 mb-4'>
+          <div className='flex flex-wrap gap-3 justify-center'>
             {['Pending', 'Approved', 'Rejected'].map((tab) => (
               <button
                 key={tab}
-                className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${
+                className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 cursor-pointer ${
                   activeTab === tab
                     ? `${getTabColor(tab)} text-white shadow-lg scale-105 ring-2 ring-white/50`
                     : `${getTabColor(tab)} text-white/50 hover:text-white/80`
@@ -149,7 +148,7 @@ const Products = () => {
         <div className='bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 shadow-2xl overflow-hidden'>
           <div className='overflow-x-auto'>
             <table className='w-full'>
-              <thead className='bg-gradient-to-r from-gray-700 to-gray-800'>
+              <thead className='bg-linear-to-r from-gray-700 to-gray-800'>
                 <tr className='text-left'>
                   <th className='p-4 text-gray-200 font-semibold'>Image</th>
                   <th className='p-4 text-gray-200 font-semibold'>Product Name</th>
@@ -214,7 +213,7 @@ const Products = () => {
                       <td className='p-4'>
                         <div className='flex flex-col gap-2'>
                           <button 
-                            className='bg-blue-500 px-4 py-1.5 rounded-lg text-white text-sm font-semibold hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 active:scale-95'
+                            className='bg-blue-500 px-4 py-1.5 rounded-lg text-white text-sm font-semibold hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer'
                             onClick={() => navigate('/edit-product', { state: { product: product } })}
                           >
                             Edit

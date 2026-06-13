@@ -114,11 +114,11 @@ const VendorApproval = () => {
   }
 
   return (
-    <div className='h-full overflow-y-scroll scroll-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black'>
+    <div className='h-full overflow-y-scroll scroll-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black'>
       <div className='container mx-auto px-4 py-8'>
         {/* Header */}
         <div className='mb-8'>
-          <h1 className='text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent text-center'>
+          <h1 className='text-4xl font-bold bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent text-center'>
             Vendor Management Dashboard
           </h1>
           <p className='text-gray-400 text-center mt-2'>Manage and verify vendor applications</p>
@@ -128,28 +128,28 @@ const VendorApproval = () => {
         <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-8'>
           <div 
             onClick={() => setFilterType('all')}
-            className={`bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer ${filterType === 'all' ? 'ring-2 ring-white scale-105' : ''}`}
+            className={`bg-linear-to-br from-blue-600 to-blue-800 rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer ${filterType === 'all' ? 'ring-2 ring-white scale-105' : ''}`}
           >
             <p className='text-blue-100 text-sm'>Total Vendors</p>
             <p className='text-3xl font-bold text-white'>{stats.total}</p>
           </div>
           <div 
             onClick={() => setFilterType('pending')}
-            className={`bg-gradient-to-br from-yellow-600 to-yellow-800 rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer ${filterType === 'pending' ? 'ring-2 ring-white scale-105' : ''}`}
+            className={`bg-linear-to-br from-yellow-600 to-yellow-800 rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer ${filterType === 'pending' ? 'ring-2 ring-white scale-105' : ''}`}
           >
             <p className='text-yellow-100 text-sm'>Pending Approval</p>
             <p className='text-3xl font-bold text-white'>{stats.pending}</p>
           </div>
           <div 
             onClick={() => setFilterType('approved')}
-            className={`bg-gradient-to-br from-green-600 to-green-800 rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer ${filterType === 'approved' ? 'ring-2 ring-white scale-105' : ''}`}
+            className={`bg-linear-to-br from-green-600 to-green-800 rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer ${filterType === 'approved' ? 'ring-2 ring-white scale-105' : ''}`}
           >
             <p className='text-green-100 text-sm'>Approved</p>
             <p className='text-3xl font-bold text-white'>{stats.approved}</p>
           </div>
           <div 
             onClick={() => setFilterType('rejected')}
-            className={`bg-gradient-to-br from-red-600 to-red-800 rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer ${filterType === 'rejected' ? 'ring-2 ring-white scale-105' : ''}`}
+            className={`bg-linear-to-br from-red-600 to-red-800 rounded-xl p-4 shadow-lg transform hover:scale-105 transition-all duration-300 cursor-pointer ${filterType === 'rejected' ? 'ring-2 ring-white scale-105' : ''}`}
           >
             <p className='text-red-100 text-sm'>Rejected</p>
             <p className='text-3xl font-bold text-white'>{stats.rejected}</p>
@@ -176,7 +176,7 @@ const VendorApproval = () => {
         <div className='bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 shadow-2xl'>
           <div className='overflow-x-auto'>
             <table className='w-full'>
-              <thead className='bg-gradient-to-r from-gray-700 to-gray-800'>
+              <thead className='bg-linear-to-r from-gray-700 to-gray-800'>
                 <tr className='text-left'>
                   <th className='p-4 text-gray-200 font-semibold'>#</th>
                   <th className='p-4 text-gray-200 font-semibold'>Vendor Name</th>
@@ -228,7 +228,7 @@ const VendorApproval = () => {
                       <td className='p-4 text-center'>
                         <button 
                           onClick={() => setSelectedVendor(vendor)} 
-                          className='bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
+                          className='cursor-pointer bg-linear-to-r from-blue-500 to-blue-600 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
                         >
                           View Details
                         </button>
@@ -244,9 +244,9 @@ const VendorApproval = () => {
         {/* Vendor Details Modal */}
         {selectedVendor && (
           <div className='fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4 overflow-y-auto'>
-            <div className='bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl max-w-4xl w-full shadow-2xl border border-gray-700 transform transition-all duration-300 scale-100'>
+            <div className='bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl max-w-4xl w-full shadow-2xl border border-gray-700 transform transition-all duration-300 scale-100'>
               {/* Modal Header */}
-              <div className={`bg-gradient-to-r p-6 rounded-t-2xl ${
+              <div className={`bg-linear-to-r p-6 rounded-t-2xl ${
                 selectedVendor.verificationStatus === 'Approved' ? 'from-green-600 to-green-700' :
                 selectedVendor.verificationStatus === 'Rejected' ? 'from-red-600 to-red-700' :
                 'from-blue-600 to-purple-600'
@@ -263,7 +263,7 @@ const VendorApproval = () => {
                       setReason('')
                       setActiveTab('basic')
                     }}
-                    className='text-white hover:text-gray-200 transition-colors text-2xl w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center'
+                    className='cursor-pointer text-white hover:text-gray-200 transition-colors text-2xl w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center'
                   >
                     ✕
                   </button>
@@ -475,15 +475,15 @@ const VendorApproval = () => {
                 {activeTab === 'statistics' && (
                   <div className='space-y-4'>
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-                      <div className='bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-4'>
+                      <div className='bg-linear-to-br from-blue-600 to-blue-700 rounded-lg p-4'>
                         <p className='text-blue-100 text-sm'>Total Products</p>
                         <p className='text-2xl font-bold text-white'>{selectedVendor?.totalProducts || 0}</p>
                       </div>
-                      <div className='bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-4'>
+                      <div className='bg-linear-to-br from-purple-600 to-purple-700 rounded-lg p-4'>
                         <p className='text-purple-100 text-sm'>Total Orders</p>
                         <p className='text-2xl font-bold text-white'>{selectedVendor?.totalOrders || 0}</p>
                       </div>
-                      <div className='bg-gradient-to-br from-green-600 to-green-700 rounded-lg p-4'>
+                      <div className='bg-linear-to-br from-green-600 to-green-700 rounded-lg p-4'>
                         <p className='text-green-100 text-sm'>Total Revenue</p>
                         <p className='text-2xl font-bold text-white'>₹{selectedVendor?.totalRevenue?.toLocaleString() || 0}</p>
                       </div>
@@ -526,7 +526,7 @@ const VendorApproval = () => {
 
                     <div className='flex flex-wrap gap-3 pt-6 mt-4 border-t border-gray-700'>
                       <button 
-                        className='flex-1 bg-gradient-to-r from-green-500 to-green-600 py-3 rounded-lg text-white font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed'
+                        className='flex-1 bg-linear-to-r from-green-500 to-green-600 py-3 rounded-lg text-white font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed'
                         onClick={() => handleVerify('Approved')}
                         disabled={loading}
                       >
@@ -535,7 +535,7 @@ const VendorApproval = () => {
                       
                       {status !== "Rejected" ? (
                         <button 
-                          className='flex-1 bg-gradient-to-r from-red-500 to-red-600 py-3 rounded-lg text-white font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
+                          className='flex-1 bg-linear-to-r from-red-500 to-red-600 py-3 rounded-lg text-white font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
                           onClick={() => setStatus("Rejected")}
                           disabled={loading}
                         >

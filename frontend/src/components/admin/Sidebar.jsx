@@ -1,12 +1,13 @@
-import { label } from 'motion/react-client'
-import React from 'react'
+import React, { useContext } from 'react'
+import { userDataContext } from '../../context/UserContext';
 import { MdDashboard } from "react-icons/md";
 import { FaStore } from "react-icons/fa";
 import { FaShoppingBag } from "react-icons/fa";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaBox } from "react-icons/fa";
 
-const Sidebar = ({ activePage, setActivePage, css='', setOpenMenu }) => {
+const Sidebar = ({css='', setOpenMenu }) => {
+  const { activePage, setActivePage} = useContext(userDataContext)
 
   const menu = [
     { id: "dashboard", label: "Dashboard", icon: <MdDashboard size={22}/> },
@@ -18,8 +19,7 @@ const Sidebar = ({ activePage, setActivePage, css='', setOpenMenu }) => {
 
 
   return (
-    <div className={`bg-gray-900 w-[20%] pl-5 pt-3 ${css}`}>
-      <h1 className='text-2xl'>Admin Panel</h1>
+    <div className={`bg-gray-900 w-[20%] pl-5 py-3 ${css}`}>
       {
         menu.map((item, index)=>{
           return <Button key={index} onclick={()=>{setOpenMenu? setOpenMenu(false): ""; setActivePage(item.id)}} css={activePage == item.id? 'bg-blue-900 hover:bg-blue-800': 'bg-gray-700 hover:bg-gray-800'}>

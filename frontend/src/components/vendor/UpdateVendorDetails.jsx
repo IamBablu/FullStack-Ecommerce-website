@@ -110,7 +110,7 @@ const UpdateVendorDetails = () => {
     }, [userdata])
 
     return (
-        <div className='min-h-screen w-full bg-gradient-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center p-4 relative overflow-y-auto'>
+        <div className='h-screen w-full bg-linear-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center relative overflow-y-auto'>
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
@@ -121,7 +121,7 @@ const UpdateVendorDetails = () => {
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.5, type: "spring" }}
-                className='w-full max-w-md bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'
+                className='w-full max-w-md bg-linear-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'
             >
                 {/* Back Button */}
                 <div className='px-6 pt-4'>
@@ -134,27 +134,17 @@ const UpdateVendorDetails = () => {
                     </button>
                 </div>
 
-                {/* Header */}
-                {/* <div className='text-center pt-2 pb-4'>
-                    <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.2, type: "spring" }}
-                        className='inline-block'
-                    >
-                        <div className='w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg'>
-                            <FaUserEdit className='text-3xl text-white' />
-                        </div>
-                    </motion.div>
-                    <h1 className='text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent'>
-                        Edit Profile
-                    </h1>
-                    <p className='text-gray-400 text-sm mt-1'>Update your vendor information</p>
-                </div> */}
-
-                <div className='px-6 pb-8'>
+                <div className='px-6 pb-2'>
                     {/* Avatar Section */}
-                    <div className='flex flex-col items-center mb-6'>
+                    <div className='flex justify-center gap-6 items-center'>
+                        {avatarFile && (
+                            <button
+                                onClick={uploadAvatar}
+                                className='mt-2 px-4 py-1 bg-green-600 rounded-lg text-sm hover:bg-green-700 transition-colors cursor-pointer'
+                            >
+                                Save Avatar
+                            </button>
+                        )}
                         <div className='relative group'>
                             <Avatar 
                                 name={userdata?.fullName} 
@@ -163,7 +153,7 @@ const UpdateVendorDetails = () => {
                             />
                             <label 
                                 htmlFor="avatar-upload"
-                                className='absolute bottom-0 right-0 p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full cursor-pointer hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg'
+                                className='absolute bottom-0 right-0 p-2 bg-linear-to-r from-blue-600 to-indigo-600 rounded-full cursor-pointer hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg'
                             >
                                 <MdAddPhotoAlternate className='text-white text-lg' />
                             </label>
@@ -175,14 +165,7 @@ const UpdateVendorDetails = () => {
                                 className='hidden'
                             />
                         </div>
-                        {avatarFile && (
-                            <button
-                                onClick={uploadAvatar}
-                                className='mt-2 px-4 py-1 bg-green-600 rounded-lg text-sm hover:bg-green-700 transition-colors cursor-pointer'
-                            >
-                                Save Avatar
-                            </button>
-                        )}
+                        
                     </div>
 
                     {/* Messages */}
@@ -192,7 +175,7 @@ const UpdateVendorDetails = () => {
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
-                                className='mb-4 bg-red-500/10 border border-red-500/50 rounded-lg p-3'
+                                className='my-1 bg-red-500/10 border border-red-500/50 rounded-lg p-1'
                             >
                                 <p className='text-red-400 text-sm text-center'>{error}</p>
                             </motion.div>
@@ -202,7 +185,7 @@ const UpdateVendorDetails = () => {
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
-                                className='mb-4 bg-green-500/10 border border-green-500/50 rounded-lg p-3'
+                                className='my-1 bg-green-500/10 border border-green-500/50 rounded-lg p-1'
                             >
                                 <p className='text-green-400 text-sm text-center flex items-center justify-center gap-2'>
                                     <MdVerified />
@@ -212,8 +195,8 @@ const UpdateVendorDetails = () => {
                         )}
                     </AnimatePresence>
 
-                    <form onSubmit={handleUpdate} className='space-y-4'>
-                        <div className='max-h-96 overflow-y-auto custom-scrollbar pr-2 space-y-4'>
+                    <form onSubmit={handleUpdate}>
+                        <div className='max-h-82 overflow-y-auto custom-scrollbar pr-2 space-y-2'>
                             {/* Username/Email (Disabled) */}
                             <div>
                                 <label className='text-gray-300 text-sm font-medium flex items-center gap-2 mb-2'>
@@ -348,7 +331,7 @@ const UpdateVendorDetails = () => {
                             <button
                                 type='submit'
                                 disabled={loading}
-                                className='flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer'
+                                className='flex-1 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 rounded-lg font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer'
                             >
                                 {loading ? (
                                     <>
@@ -368,14 +351,14 @@ const UpdateVendorDetails = () => {
                     {/* Logout Button */}
                     <button
                         onClick={handleLogOut}
-                        className='w-full mt-4 py-2.5 bg-red-600/20 border border-red-600 rounded-lg font-semibold text-red-400 hover:bg-red-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer'
+                        className='w-full mt-2 py-2.5 bg-red-600/20 border border-red-600 rounded-lg font-semibold text-red-400 hover:bg-red-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer'
                     >
                         <FaSignOutAlt />
                         Logout
                     </button>
 
                     {/* Account Info */}
-                    <div className='mt-6 pt-4 border-t border-gray-700 text-center'>
+                    <div className='mt-2 pt-1 border-t border-gray-700 text-center'>
                         <p className='text-gray-500 text-xs'>
                             Member since {new Date(userdata?.createdAt).toLocaleDateString()}
                         </p>

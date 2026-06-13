@@ -58,7 +58,7 @@ const AdminDashboard = () => {
   return (
     <div className='flex justify-end h-screen w-screen pt-20'>
         <Sidebar activePage={activePage} setActivePage={setActivePage} css='hidden md:block'/>
-      <div className='md:w-[80%]'>
+      <div className='w-full md:w-4/5'>
       {renderPage()}
       </div>
     </div>

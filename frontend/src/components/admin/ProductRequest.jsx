@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { userDataContext } from '../../context/UserContext'
 import axios from 'axios'
+import { div } from 'motion/react-client'
 
 const ProductRequest = () => {
   const { serverUrl, userdata, setUserData, products, setProducts, vendors, setVendors } = useContext(userDataContext)
@@ -85,66 +86,74 @@ const ProductRequest = () => {
   }
 
   return (
-    <div className='h-full overflow-y-scroll scroll-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black'>
+    <div className='w-full h-full overflow-y-scroll scroll-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black'>
       <div className='container mx-auto px-4 py-8'>
         {/* Header */}
         <div className='mb-8'>
-          <h1 className='text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent text-center'>
+          <h1 className='text-4xl font-bold bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent text-center'>
             Product Management Dashboard
           </h1>
           <p className='text-gray-400 text-center mt-2'>Manage and verify product requests from vendors</p>
         </div>
 
 
-        {/* Tabs */}
-        <div className='flex flex-wrap gap-3 mb-6'>
-          {['Pending', 'Approved', 'Rejected'].map((tab) => {
-            const getTabColor = () => {
-              if (tab === 'Pending') return 'bg-yellow-600 hover:bg-yellow-700';
-              if (tab === 'Approved') return 'bg-green-600 hover:bg-green-700';
-              return 'bg-red-600 hover:bg-red-700';
-            };
 
-            return (
-              <button
-                key={tab}
-                className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${activePage === tab
+          {/* making tabs and search section sticky at top position */}
+        <div className='sticky top-0 z-10 bg-gray-800 pt-4 px-2 rounded-lg transition-all duration-300'>
+          <div className='md:flex gap-30'>
+
+          {/* Tabs */}
+          <div className='flex flex-wrap gap-3 mb-6 justify-center'>
+            {['Pending', 'Approved', 'Rejected'].map((tab) => {
+              const getTabColor = () => {
+                if (tab === 'Pending') return 'bg-yellow-600 hover:bg-yellow-700';
+                if (tab === 'Approved') return 'bg-green-600 hover:bg-green-700';
+                return 'bg-red-600 hover:bg-red-700';
+              };
+
+              return (
+                <button
+                  key={tab}
+                  className={`cursor-pointer px-1 text-sm md:px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${activePage === tab
                     ? `${getTabColor()} text-white shadow-lg scale-105`
                     : `${getTabColor()} text-white/70 opacity-70`
-                  }`}
-                onClick={() => setActivePage(tab)}
-              >
-                {tab} Products
-                <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${activePage === tab ? 'bg-white/20' : 'bg-black/20'
-                  }`}>
-                  {tab === 'Pending' ? stats.pending : tab === 'Approved' ? stats.approved : stats.rejected}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Search Bar */}
-        <div className='mb-6'>
-          <div className='relative max-w-md'>
-            <svg className='absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            <input
-              type='text'
-              placeholder={`Search ${activePage.toLowerCase()} products by title, category, or price...`}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors'
-            />
+                    }`}
+                  onClick={() => setActivePage(tab)}
+                >
+                  {tab} Products
+                  <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${activePage === tab ? 'bg-white/20' : 'bg-black/20'
+                    }`}>
+                    {tab === 'Pending' ? stats.pending : tab === 'Approved' ? stats.approved : stats.rejected}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+
+          {/* Search Bar */}
+          <div className='mb-6 pb-4 md:pb-0'>
+            <div className='relative max-w-md'>
+              <svg className='absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input
+                type='text'
+                placeholder={`Search ${activePage.toLowerCase()} products by title, category, or price...`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className='w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors'
+              />
+            </div>
+          </div>
+
+        </div>
         </div>
 
         {/* Products Table */}
-        <div className='bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 shadow-2xl'>
+        <div className='hidden md:block bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 shadow-2xl'>
           <div className='overflow-x-auto'>
             <table className='w-full'>
-              <thead className='bg-gradient-to-r from-gray-700 to-gray-800'>
+              <thead className='bg-linear-to-r from-gray-700 to-gray-800'>
                 <tr className='text-left'>
                   <th className='p-4 text-gray-200 font-semibold'>Image</th>
                   <th className='p-4 text-gray-200 font-semibold'>Product Name</th>
@@ -191,12 +200,12 @@ const ProductRequest = () => {
                         </span>
                       </td>
                       <td className='p-4'>
-                        <p className='text-gray-300'>{product.vendorDetails?.shopName || 'N/A'}</p>
+                        <p className='text-gray-300'>{product.vendor?.shopName || 'N/A'}</p>
                       </td>
                       <td className='p-4'>
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${getStatusBadgeClass(product.verificationStatus)}`}>
                           <span className={`w-1.5 h-1.5 rounded-full mr-2 ${product.verificationStatus === 'Pending' ? 'bg-yellow-500 animate-pulse' :
-                              product.verificationStatus === 'Approved' ? 'bg-green-500' : 'bg-red-500'
+                            product.verificationStatus === 'Approved' ? 'bg-green-500' : 'bg-red-500'
                             }`}></span>
                           {product.verificationStatus}
                         </span>
@@ -204,7 +213,7 @@ const ProductRequest = () => {
                       <td className='p-4 text-center'>
                         <button
                           onClick={() => setSelectedProduct(product)}
-                          className='bg-gradient-to-r from-blue-500 to-blue-600 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
+                          className='cursor-pointer bg-linear-to-r from-blue-500 to-blue-600 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
                         >
                           View Details
                         </button>
@@ -217,14 +226,91 @@ const ProductRequest = () => {
           </div>
         </div>
 
+
+        {/* // for small devices */}
+        <div className='md:hidden'>
+          {filteredProducts.length == 0 ? (
+            <div className='flex flex-col items-center gap-2 py-4 my-4 bg-gray-800/50   backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 shadow-2xl'>
+              <svg className='w-12 h-12 text-gray-500' fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+              </svg>
+              <p>No {activePage.toLowerCase()} products found</p>
+              {searchTerm && <p className='text-sm'>Try adjusting your search</p>}
+            </div>
+
+          ) : (
+            filteredProducts?.map((p, i) => (
+
+              <div key={p._id} className='bg-gray-700 p-4 my-4 rounded-2xl'>
+                <div className='flex justify-between'>
+                  <div>
+                    <p className='text-xl font-semibold mb-2'>Image</p>
+                    <img
+                      src={p.image?.[0]}
+                      className='h-24 w-24 rounded-lg object-cover border border-gray-600'
+                      alt={p.title}
+                    />
+                  </div>
+                  <div>
+                    <h4>Product Name :- </h4>
+                    <p className='text-white'>{p.title}</p>
+                    <p className='text-xs text-gray-400'>{p.description?.substring(0, 50)}...</p>
+                  </div>
+                </div>
+                <div className='flex justify-between my-2 text-center'>
+                  <div>
+                    <h4>Price</h4>
+                    <p className='font-semibold text-green-400'>₹{p.price?.toLocaleString()}</p>
+
+                  </div>
+                  <div>
+                    <h4>Category</h4>
+                    <span className='px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs'>
+                      {p.category}
+                    </span>
+                  </div>
+                  <div>
+                    <h4>Vendor</h4>
+                    <p className='text-gray-300'>{p.vendor?.shopName || 'N/A'}</p>
+
+                  </div>
+                </div>
+                <div className='flex justify-between text-center mt-4'>
+                  <div>
+                    <h4>Status</h4>
+                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${getStatusBadgeClass(p.verificationStatus)}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full mr-2 ${p.verificationStatus === 'Pending' ? 'bg-yellow-500 animate-pulse' :
+                            p.verificationStatus === 'Approved' ? 'bg-green-500' : 'bg-red-500'
+                            }`}></span>
+                          {p.verificationStatus}
+                        </span>
+                  </div>
+                  <div>
+                    <h4>Action</h4>
+                    <button
+                          onClick={() => setSelectedProduct(p)}
+                          className='cursor-pointer bg-linear-to-r from-blue-500 to-blue-600 px-4 py-2 rounded-lg text-white text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
+                        >
+                          View Details
+                        </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+
+
+
         {/* Product Details Modal */}
         {selectedProduct && (
-          <div className='fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4 overflow-y-auto'>
-            <div className='bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl max-w-3xl w-full shadow-2xl border border-gray-700'>
+          <div className='fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-3 sm:p-4 md:p-6 overflow-y-auto scroll-hidden'>
+  <div className='bg-linear-to-br from-gray-800 to-gray-900 rounded-xl sm:rounded-2xl max-w-[95%] sm:max-w-[90%] md:max-w-3xl w-full shadow-2xl border border-gray-700 my-auto mx-auto'>
               {/* Modal Header */}
-              <div className={`bg-gradient-to-r p-6 rounded-t-2xl ${selectedProduct.verificationStatus === 'Approved' ? 'from-green-600 to-green-700' :
-                  selectedProduct.verificationStatus === 'Rejected' ? 'from-red-600 to-red-700' :
-                    'from-blue-600 to-purple-600'
+              <div className={`bg-linear-to-r p-6 rounded-t-2xl ${selectedProduct.verificationStatus === 'Approved' ? 'from-green-600 to-green-700' :
+                selectedProduct.verificationStatus === 'Rejected' ? 'from-red-600 to-red-700' :
+                  'from-blue-600 to-purple-600'
                 }`}>
                 <div className='flex justify-between items-center'>
                   <div>
@@ -237,7 +323,7 @@ const ProductRequest = () => {
                       setRejected(false)
                       setReason("")
                     }}
-                    className='text-white hover:text-gray-200 transition-colors text-2xl w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center'
+                    className='cursor-pointer text-white hover:text-gray-200 transition-colors text-2xl w-8 h-8 rounded-full hover:bg-white/20 flex items-center justify-center'
                   >
                     ✕
                   </button>
@@ -245,7 +331,7 @@ const ProductRequest = () => {
               </div>
 
               {/* Modal Content */}
-              <div className='p-6'>
+              <div className='px-4 pb-2'>
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   {/* Product Image */}
                   <div className='bg-gray-700/50 rounded-lg p-4 flex justify-center items-center'>
@@ -257,7 +343,7 @@ const ProductRequest = () => {
                   </div>
 
                   {/* Product Info */}
-                  <div className='space-y-3'>
+                  <div className='space-y-2 mt-2'>
                     <div>
                       <p className='text-gray-400 text-sm'>Product Title</p>
                       <p className='text-white font-semibold text-lg'>{selectedProduct.title}</p>
@@ -284,7 +370,7 @@ const ProductRequest = () => {
                 </div>
 
                 {/* Description */}
-                <div className='mt-6'>
+                <div>
                   <p className='text-gray-400 text-sm mb-2'>Description</p>
                   <div className='bg-gray-700/50 rounded-lg p-4'>
                     <p className='text-white'>{selectedProduct.description}</p>
@@ -292,10 +378,11 @@ const ProductRequest = () => {
                 </div>
 
                 {/* Vendor Information */}
-                <div className='mt-6'>
+                <div className='my-2'>
+                  {console.log(selectedProduct.vendor._id)}
                   <button
-                    onClick={() => getShopDetails(selectedProduct.vendor)}
-                    className='bg-purple-600 px-4 py-2 rounded-lg text-white font-semibold hover:bg-purple-700 transition-all duration-300'
+                    onClick={() => getShopDetails(selectedProduct.vendor._id)}
+                    className='w-full cursor-pointer bg-purple-600 px-4 py-2 rounded-lg text-white font-semibold hover:bg-purple-700 transition-all duration-300'
                   >
                     View Vendor Details
                   </button>
@@ -323,7 +410,7 @@ const ProductRequest = () => {
                 {selectedProduct.verificationStatus === 'Pending' && (
                   <div className='flex flex-wrap gap-3 mt-6 pt-4 border-t border-gray-700'>
                     <button
-                      className='flex-1 bg-gradient-to-r from-green-500 to-green-600 py-2.5 rounded-lg text-white font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50'
+                      className='cursor-pointer flex-1 bg-linear-to-r from-green-500 to-green-600 py-2.5 rounded-lg text-white font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50'
                       onClick={() => handleVerify("Approved")}
                       disabled={loading}
                     >
@@ -332,7 +419,7 @@ const ProductRequest = () => {
 
                     {!rejected ? (
                       <button
-                        className='flex-1 bg-gradient-to-r from-red-500 to-red-600 py-2.5 rounded-lg text-white font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
+                        className='cursor-pointer flex-1 bg-linear-to-r from-red-500 to-red-600 py-2.5 rounded-lg text-white font-semibold hover:from-red-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg'
                         onClick={() => setRejected(true)}
                         disabled={loading}
                       >
@@ -340,7 +427,7 @@ const ProductRequest = () => {
                       </button>
                     ) : (
                       <button
-                        className='flex-1 bg-red-600 py-2.5 rounded-lg text-white font-semibold hover:bg-red-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50'
+                        className='cursor-pointer flex-1 bg-red-600 py-2.5 rounded-lg text-white font-semibold hover:bg-red-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg disabled:opacity-50'
                         onClick={() => handleVerify("Rejected")}
                         disabled={loading || !reason.trim()}
                       >
@@ -349,7 +436,7 @@ const ProductRequest = () => {
                     )}
 
                     <button
-                      className='flex-1 bg-gray-600 py-2.5 rounded-lg text-white font-semibold hover:bg-gray-700 transition-all duration-300'
+                      className='cursor-pointer flex-1 bg-gray-600 py-2.5 rounded-lg text-white font-semibold hover:bg-gray-700 transition-all duration-300'
                       onClick={() => {
                         setSelectedProduct(null)
                         setRejected(false)
@@ -362,16 +449,6 @@ const ProductRequest = () => {
                   </div>
                 )}
 
-                {selectedProduct.verificationStatus !== 'Pending' && (
-                  <div className='mt-6 pt-4 border-t border-gray-700'>
-                    <button
-                      className='w-full bg-gray-600 py-2.5 rounded-lg text-white font-semibold hover:bg-gray-700 transition-all duration-300'
-                      onClick={() => setSelectedProduct(null)}
-                    >
-                      Close
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -380,13 +457,13 @@ const ProductRequest = () => {
         {/* Vendor Details Modal */}
         {vendorDetails && (
           <div className='fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4'>
-            <div className='bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl max-w-lg w-full shadow-2xl border border-gray-700'>
-              <div className='bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-t-2xl'>
+            <div className='bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl max-w-lg w-full shadow-2xl border border-gray-700'>
+              <div className='bg-linear-to-r from-purple-600 to-pink-600 p-6 rounded-t-2xl'>
                 <div className='flex justify-between items-center'>
                   <h2 className='text-2xl font-bold text-white'>Vendor Details</h2>
                   <button
                     onClick={() => setVendorDetails(null)}
-                    className='text-white hover:text-gray-200 transition-colors text-2xl'
+                    className='cursor-pointer text-white hover:text-gray-200 transition-colors text-2xl'
                   >
                     ✕
                   </button>
@@ -422,7 +499,7 @@ const ProductRequest = () => {
                 </div>
 
                 <button
-                  className='w-full bg-gray-600 py-2.5 rounded-lg text-white font-semibold hover:bg-gray-700 transition-all duration-300 mt-4'
+                  className='cursor-pointer w-full bg-gray-600 py-2.5 rounded-lg text-white font-semibold hover:bg-gray-700 transition-all duration-300 mt-4'
                   onClick={() => setVendorDetails(null)}
                 >
                   Close
@@ -432,7 +509,7 @@ const ProductRequest = () => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   )
 }
 

@@ -133,8 +133,8 @@ const getUserOrder = AsyncHandler(async (req, res)=> {
 const updateOrderStatus = AsyncHandler(async (req, res) => {
     const { orderId } = req.params;
     const { orderStatus } = req.body;
-    const vendorId = req.user._id;
-    console.log(orderId, vendorId, orderStatus)
+    const userId = req.user._id;
+    console.log(orderId, userId, orderStatus)
 
     // Validate orderId
     if (!orderId) {
@@ -147,18 +147,28 @@ const updateOrderStatus = AsyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid order status");
     }
 
-    // Find the order and check if it belongs to the vendor
-    const order = await Order.findOne({
+    //check user is vendor or itself Admin
+    const user = await User.findById(userId).select("role")
+    let order;
+    let statusFlow;
+    if (user.role == "Admin") {
+        order = await Order.findById(orderId)
+        statusFlow = {
+        pending: ["confirmed", "canceled"],
+        confirmed: ["shipped", "canceled"],
+        shipped: ["delivered", "returned", "canceled"],
+        delivered: ["return"],
+        returned: ["canceled"],
+        canceled: []
+    };
+    }else if(user.role == "Vendor"){
+         // Find the order and check if it belongs to the vendor
+    order = await Order.findOne({
         _id: orderId,
-        productVendor: vendorId
+        productVendor: userId
     });
-    
-    if (!order) {
-        throw new ApiError(404, "Order not found or unauthorized");
-    }
-
-    // Define status flow rules
-    const statusFlow = {
+     // Define status flow rules
+    statusFlow = {
         pending: ["confirmed", "canceled"],
         confirmed: ["shipped", "canceled"],
         shipped: ["delivered", "returned"],
@@ -166,12 +176,22 @@ const updateOrderStatus = AsyncHandler(async (req, res) => {
         returned: [],
         canceled: []
     };
+    }else{
+        throw new ApiError(400, "Unauthorized Request")
+    }
+
+   
+    
+    if (!order) {
+        throw new ApiError(404, "Order not found");
+    }
+
+   
 
     // Check if status transition is valid
     if (!statusFlow[order.orderStatus]?.includes(orderStatus)) {
         throw new ApiError(400, `Cannot change status from ${order.orderStatus} to ${orderStatus}`);
     }
-    console.log("hhdgffs: ", order.orderStatus)
 
     // Update order status
     order.orderStatus = orderStatus;

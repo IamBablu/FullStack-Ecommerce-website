@@ -12,14 +12,6 @@ const RejectedVendor = () => {
     const [showHelp, setShowHelp] = useState(false)
     const [feedbackSent, setFeedbackSent] = useState(false)
 
-    useEffect(() => {
-        console.log(userdata)
-    }, [userdata])
-
-    const handleContactSupport = () => {
-        window.location.href = 'mailto:support@example.com?subject=Vendor%20Verification%20Appeal&body=Hello%20Support%20Team,%0A%0AMy%20vendor%20application%20was%20rejected.%20I%20would%20like%20to%20appeal%20the%20decision.%0A%0AReason%20for%20rejection:%20' + encodeURIComponent(userdata?.rejectedReason || 'Not provided') + '%0A%0APlease%20review%20my%20application%20again.%0A%0AThank%20you.';
-    }
-
     const handleFeedback = () => {
         setFeedbackSent(true)
         setTimeout(() => setFeedbackSent(false), 3000)
@@ -74,7 +66,7 @@ const RejectedVendor = () => {
     }
 
     return (
-        <div className='min-h-screen mt-20 w-full bg-gradient-to-br from-gray-900 via-red-900 to-black flex items-center justify-center p-4 relative overflow-hidden'>
+        <div className='min-h-screen mt-20 w-full bg-linear-to-br from-gray-900 via-red-900 to-black flex items-center justify-center p-4 relative overflow-hidden'>
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
@@ -87,9 +79,9 @@ const RejectedVendor = () => {
                 transition={{ duration: 0.5, type: "spring" }}
                 className='w-full max-w-lg'
             >
-                <div className='bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'>
+                <div className='bg-linear-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'>
                     {/* Animated Header */}
-                    <div className='relative bg-gradient-to-r from-red-600 to-red-700 px-6 py-8 text-center overflow-hidden'>
+                    <div className='relative bg-linear-to-r from-red-600 to-red-700 px-6 py-8 text-center overflow-hidden'>
                         <motion.div
                             animate={{ 
                                 scale: [1, 1.2, 1],
@@ -182,7 +174,7 @@ const RejectedVendor = () => {
                                         transition={{ delay: 0.6 + (index * 0.1) }}
                                         className='flex items-start gap-2 text-sm text-gray-300'
                                     >
-                                        <MdCheckCircle className='text-green-400 mt-0.5 flex-shrink-0' />
+                                        <MdCheckCircle className='text-green-400 mt-0.5 ' />
                                         <span>{tip}</span>
                                     </motion.li>
                                 ))}
@@ -195,34 +187,24 @@ const RejectedVendor = () => {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => navigate('/update-vendor-details')}
-                                className='w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2'
+                                className='cursor-pointer w-full px-4 py-3 bg-linear-to-r from-blue-600 to-indigo-600 rounded-xl font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2'
                             >
                                 <FaRedo className='text-white' />
                                 Verify Again
                                 <TbPlayerTrackNextFilled />
                             </motion.button>
 
-                            <div className='grid grid-cols-2 gap-3'>
+
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => setShowHelp(!showHelp)}
-                                    className='px-4 py-2.5 bg-gray-700 rounded-lg font-semibold text-gray-300 hover:bg-gray-600 transition-all flex items-center justify-center gap-2'
+                                    className='px-4 w-full cursor-pointer py-2.5 bg-gray-700 rounded-lg font-semibold text-gray-300 hover:bg-gray-600 transition-all flex items-center justify-center gap-2'
                                 >
                                     <MdSupportAgent />
                                     Need Help?
                                 </motion.button>
 
-                                <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    onClick={handleContactSupport}
-                                    className='px-4 py-2.5 bg-gray-700 rounded-lg font-semibold text-gray-300 hover:bg-gray-600 transition-all flex items-center justify-center gap-2'
-                                >
-                                    <MdEmail />
-                                    Contact Support
-                                </motion.button>
-                            </div>
                         </div>
 
                         {/* Help Section */}
@@ -256,7 +238,7 @@ const RejectedVendor = () => {
                                         </ul>
                                         <button
                                             onClick={handleFeedback}
-                                            className='mt-2 w-full py-2 bg-blue-600/20 border border-blue-600 rounded-lg text-blue-400 text-sm hover:bg-blue-600/30 transition-colors flex items-center justify-center gap-2'
+                                            className='mt-2 w-full py-2 bg-blue-600/20 border border-blue-600 rounded-lg text-blue-400 text-sm hover:bg-blue-600/30 transition-colors flex items-center justify-center gap-2 cursor-pointer '
                                         >
                                             <FaPaperPlane />
                                             Send Feedback

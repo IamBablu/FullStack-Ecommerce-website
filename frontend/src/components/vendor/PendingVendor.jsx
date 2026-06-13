@@ -31,7 +31,7 @@ const PendingVendor = () => {
   };
 
   return (
-    <div className='min-h-screen mt-20 w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4'>
+    <div className='min-h-screen mt-20 w-full bg-linear-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center p-4'>
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -40,9 +40,9 @@ const PendingVendor = () => {
           className='max-w-md w-full'
         >
           {/* Main Card */}
-          <div className='bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'>
+          <div className='bg-linear-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'>
             {/* Animated Header */}
-            <div className='relative bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8 text-center overflow-hidden'>
+            <div className='relative bg-linear-to-r from-blue-600 to-indigo-600 px-6 py-8 text-center overflow-hidden'>
               <motion.div
                 animate={{ 
                   rotate: 360,
@@ -146,7 +146,7 @@ const PendingVendor = () => {
                     <motion.div
                       initial={{ width: "33%" }}
                       animate={{ width: "33%" }}
-                      className='h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500'
+                      className='h-2 rounded-full bg-linear-to-r from-blue-500 to-indigo-500'
                     />
                   </div>
                   <motion.div
@@ -170,7 +170,7 @@ const PendingVendor = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={handleRefresh}
-                  className='w-full px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2'
+                  className='w-full cursor-pointer px-4 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 rounded-lg font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all flex items-center justify-center gap-2'
                 >
                   <FaSpinner className={`animate-spin ${timeElapsed > 0 ? 'opacity-100' : 'opacity-0'}`} />
                   Check Status Again

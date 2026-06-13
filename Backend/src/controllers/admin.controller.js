@@ -77,7 +77,8 @@ const getAllProduct = AsyncHandler(async (req, res) => {
   const admin = await User.findById(user._id);
   if (admin.role !== "Admin")
     throw new ApiError(400, "Only Admin can access this route");
-  const products = await Product.find({});
+  const products = await Product.find({})
+  .populate("vendor", "shopName");
   return res
     .status(200)
     .json(new ApiResponse(200, products, "Searching Products Successful"));

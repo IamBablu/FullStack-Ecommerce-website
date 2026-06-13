@@ -222,7 +222,7 @@ const EditProduct = () => {
 
     if (!product) {
         return (
-            <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+            <div className="min-h-screen w-full flex items-center justify-center bg-linear-to-br from-gray-900 to-black">
                 <div className="text-center">
                     <p className="text-gray-400 text-lg">No product data available</p>
                     <button 
@@ -237,7 +237,7 @@ const EditProduct = () => {
     }
 
     return (
-        <div className='min-h-screen w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black py-8 px-4 overflow-y-auto'>
+        <div className='min-h-screen w-full bg-linear-to-br from-gray-900 via-gray-800 to-black py-8 px-4 overflow-y-auto'>
             <AnimatePresence>
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -250,14 +250,14 @@ const EditProduct = () => {
                         <motion.h1 
                             initial={{ scale: 0.9 }}
                             animate={{ scale: 1 }}
-                            className="text-4xl font-bold bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent"
+                            className="text-4xl font-bold bg-linear-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent"
                         >
                             Edit Product
                         </motion.h1>
                         <p className="text-gray-400 mt-2">Update your product information</p>
                     </div>
 
-                    <div className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+                    <div className="bg-linear-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
                         <form onSubmit={handleSubmit} className="p-6 space-y-6">
                             {/* Basic Information Section */}
                             <div className="space-y-4">
@@ -408,7 +408,7 @@ const EditProduct = () => {
                                                         onClick={() => handleSizeClicked(size)} 
                                                         className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
                                                             isSelected 
-                                                                ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white shadow-lg' 
+                                                                ? 'bg-linear-to-r from-yellow-500 to-orange-600 text-white shadow-lg' 
                                                                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                                                         }`}
                                                     >
@@ -552,7 +552,7 @@ const EditProduct = () => {
                                     <button 
                                         type='button' 
                                         onClick={addDetailPoint} 
-                                        className='px-6 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg cursor-pointer hover:from-yellow-700 hover:to-orange-700 transition-all flex items-center gap-2 justify-center'
+                                        className='px-6 py-2 bg-linear-to-r from-yellow-600 to-orange-600 rounded-lg cursor-pointer hover:from-yellow-700 hover:to-orange-700 transition-all flex items-center gap-2 justify-center'
                                     >
                                         <MdAdd className="text-xl" />
                                         Add Point
@@ -571,14 +571,14 @@ const EditProduct = () => {
                                                     animate={{ opacity: 1, x: 0 }}
                                                     className='flex items-center gap-2 p-2 bg-gray-700/30 rounded-lg group hover:bg-gray-700/50 transition-colors'
                                                 >
-                                                    <MdCheckCircle className="text-green-400 flex-shrink-0" />
+                                                    <MdCheckCircle className="text-green-400" />
                                                     <p className='flex-1 text-gray-200'>{point}</p>
                                                     <button 
                                                         type='button' 
                                                         onClick={() => removeDetailPoint(index)} 
                                                         className='p-1 text-red-400 hover:text-red-300 transition-colors opacity-0 group-hover:opacity-100'
                                                     >
-                                                        <MdDelete className="text-xl" />
+                                                        <MdDelete className="text-xl cursor-pointer" />
                                                     </button>
                                                 </motion.div>
                                             )
@@ -592,21 +592,21 @@ const EditProduct = () => {
                                 <button 
                                     type="button"
                                     onClick={() => setShowPreview(!showPreview)}
-                                    className="flex-1 px-6 py-3 bg-gray-700 rounded-lg font-semibold hover:bg-gray-600 transition-all"
+                                    className="cursor-pointer flex-1 px-6 py-3 bg-gray-700 rounded-lg font-semibold hover:bg-gray-600 transition-all"
                                 >
                                     {showPreview ? 'Hide Preview' : 'Show Preview'}
                                 </button>
                                 <button 
                                     type="button"
-                                    onClick={() => navigate('/vendor/products')}
-                                    className="flex-1 px-6 py-3 bg-red-600/20 border border-red-600 rounded-lg font-semibold hover:bg-red-600/30 transition-all"
+                                    onClick={() => navigate('/')}
+                                    className="cursor-pointer flex-1 px-6 py-3 bg-red-600/20 border border-red-600 rounded-lg font-semibold hover:bg-red-600/30 transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button 
                                     type='submit' 
                                     disabled={loading}
-                                    className='flex-1 px-6 py-3 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg font-semibold hover:from-yellow-700 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                                    className='cursor-pointer flex-1 px-6 py-3 bg-linear-to-r from-yellow-600 to-orange-600 rounded-lg font-semibold hover:from-yellow-700 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                                 >
                                     {loading ? (
                                         <div className="flex items-center justify-center gap-2">
@@ -638,13 +638,13 @@ const EditProduct = () => {
                                     initial={{ scale: 0.9, y: 20 }}
                                     animate={{ scale: 1, y: 0 }}
                                     exit={{ scale: 0.9, y: 20 }}
-                                    className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                                    className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
                                     onClick={(e) => e.stopPropagation()}
                                 >
                                     <div className="sticky top-0 bg-gray-800/95 backdrop-blur-sm p-4 border-b border-gray-700 flex justify-between items-center">
                                         <h3 className="text-xl font-bold text-white">Product Preview</h3>
                                         <button onClick={() => setShowPreview(false)} className="p-1 hover:bg-gray-700 rounded-lg transition-colors">
-                                            <MdClose className="text-2xl" />
+                                            <MdClose className="text-2xl text-white cursor-pointer" />
                                         </button>
                                     </div>
                                     <div className="p-6 space-y-4">
@@ -673,11 +673,22 @@ const EditProduct = () => {
                                         )}
                                         <div className="flex gap-2 pt-4">
                                             <button 
-                                                onClick={() => setShowPreview(false)}
-                                                className="flex-1 px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
-                                            >
-                                                Close Preview
-                                            </button>
+                                    onClick={handleSubmit} 
+                                    disabled={loading}
+                                    className='cursor-pointer flex-1 px-6 py-3 bg-linear-to-r from-yellow-600 to-orange-600 rounded-lg font-semibold hover:from-yellow-700 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                                >
+                                    {loading ? (
+                                        <div className="flex items-center justify-center gap-2">
+                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                            Saving...
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center justify-center gap-2">
+                                            <FaSave />
+                                            Save Changes
+                                        </div>
+                                    )}
+                                </button>
                                         </div>
                                     </div>
                                 </motion.div>

@@ -44,7 +44,7 @@ const Home = () => {
     }
   }
   return (
-    <AnimatePresence mode='wait'>
+    <AnimatePresence mode='popLayout'>
       <motion.div className='scroll-hidden text-white h-screen w-full bg-linear-to-b from-blue-950 to-black relative overflow-x-hidden'>
       {renderComponent()}
       </motion.div>

@@ -231,7 +231,7 @@ const Dashboard = () => {
 
           {/* Desktop Categories */}
           <div className='hidden md:grid grid-cols-5 gap-6'>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               {currentCategory.map((item, index) => (
                 <motion.button
                   key={`${currenCategoryIndex}-${index}`}
@@ -262,7 +262,7 @@ const Dashboard = () => {
 
           {/* Mobile Categories */}
           <div className='grid grid-cols-2 gap-4 md:hidden'>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               {currentCategorySm.map((item, index) => (
                 <motion.button
                   key={`${currenCategoryIndexSm}-${index}`}

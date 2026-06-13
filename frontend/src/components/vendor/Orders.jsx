@@ -3,13 +3,11 @@ import { userDataContext } from '../../context/UserContext'
 import axios from 'axios';
 
 const Orders = () => {
-  const { activePage, setActivePage, serverUrl, userdata } = useContext(userDataContext)
+  const { activePage, setActivePage, serverUrl, userdata, loading, setLoading } = useContext(userDataContext)
   const [orders, setOrders] = useState([])
   const [filteredOrders, setFilteredOrders] = useState([])
   const [activeStatus, setActiveStatus] = useState('pending')
-  const [loading, setLoading] = useState(true)
   const [selectedOrder, setSelectedOrder] = useState(null)
-  const [updatingStatus, setUpdatingStatus] = useState(false)
 
   const statusButtons = [
     { label: 'PENDING', value: 'pending', color: 'bg-yellow-500', bgColor: 'bg-yellow-900/30', borderColor: 'border-yellow-500' },
@@ -56,7 +54,7 @@ const Orders = () => {
 
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
-      setUpdatingStatus(true)
+      setLoading(true)
       console.log(orderId, newStatus)
       const result = await axios.put(`${serverUrl}/order/update-order-status/${orderId}`,
         { orderStatus: newStatus },
@@ -72,7 +70,7 @@ const Orders = () => {
       console.error(error)
       alert('Failed to update order status')
     } finally {
-      setUpdatingStatus(false)
+      setLoading(false)
     }
   }
 
@@ -101,22 +99,22 @@ const Orders = () => {
   }
 
   return (
-    <div className="w-full h-full py-4 bg-gradient-to-br from-gray-800 via-gray-800 to-black text-white overflow-y-scroll scroll-hidden">
-      <div className="container mx-auto px-4 py-8">
+    <div className="w-full h-full py-4 bg-linear-to-br from-gray-800 via-gray-800 to-black text-white overflow-y-scroll scroll-hidden">
+      <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+        <div className="mb-2">
+          <h1 className="text-3xl font-bold bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             Vendor Orders
           </h1>
           <p className="text-gray-400 mt-2">Manage and track all orders for your products</p>
         </div>
 
         {/* Status Filter Buttons */}
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="flex flex-wrap gap-3 mb-2 justify-center">
           <button
             onClick={() => handleStatusClick('all')}
-            className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${activeStatus === 'all'
-              ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg scale-105'
+            className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 cursor-pointer ${activeStatus === 'all'
+              ? 'bg-linear-to-r from-blue-500 to-purple-500 text-white shadow-lg scale-105'
               : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
           >
@@ -128,7 +126,7 @@ const Orders = () => {
               <button
                 key={btn.value}
                 onClick={() => handleStatusClick(btn.value)}
-                className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${activeStatus === btn.value
+                className={`w-34 px-2 py-2 rounded-lg font-semibold transition-all duration-300 cursor-pointer ${activeStatus === btn.value
                   ? `${btn.bgColor} ${btn.borderColor} border-2 shadow-lg scale-105 text-white`
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   }`}
@@ -175,7 +173,7 @@ const Orders = () => {
                     <td className="p-4">
                       <div>
                         <p className="font-medium">{order.buyer?.fullName || 'N/A'}</p>
-                        <p className="text-xs text-gray-400">{order.userInfo?.email || order.buyer?.email}</p>
+                        <p className="text-xs text-gray-400">{order.userInfo?.email || 'N/A'}</p>
                       </div>
                     </td>
                     <td className="p-4">
@@ -206,19 +204,23 @@ const Orders = () => {
                         {order.orderStatus?.toUpperCase()}
                       </span>
                     </td>
-                    <td className="p-4">
+                    <td className="p-4 py-2">
+                      <button
+                        className='bg-blue-500 px-3 mb-2 py-1.5 rounded-lg text-white text-sm font-semibold hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer block'
+                        onClick={() => setSelectedOrder(order)}
+                      >
+                        check details
+                      </button>
                       <select
                         value={order.orderStatus}
                         onChange={(e) => updateOrderStatus(order._id, e.target.value)}
                         className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
-                        disabled={updatingStatus}
+                        disabled={loading}
                       >
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="returned">Returned</option>
-                        <option value="canceled">Canceled</option>
+                        <option value=''>{order.orderStatus}</option>
+                        {getNextStatuses(order.orderStatus).map((status, i) => (
+                          <option key={i} value={status}>{status}</option>
+                        ))}
                       </select>
                     </td>
                   </tr>
@@ -232,17 +234,17 @@ const Orders = () => {
         {selectedOrder && (
           <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 overflow-y-auto">
             <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 my-8">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Order Details</h2>
                 <button
                   onClick={() => setSelectedOrder(null)}
-                  className="text-gray-400 hover:text-white text-2xl"
+                  className="text-gray-400 hover:text-white text-2xl cursor-pointer"
                 >
                   ✕
                 </button>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-1">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-gray-400 text-sm">Order ID</p>
@@ -256,7 +258,7 @@ const Orders = () => {
 
                 <div>
                   <p className="text-gray-400 text-sm mb-2">Buyer Information</p>
-                  <div className="bg-gray-700 rounded-lg p-3">
+                  <div className="bg-gray-700 rounded-lg p-3 py-1">
                     <p><span className="text-gray-400">Name:</span> {selectedOrder.buyer?.fullName}</p>
                     <p><span className="text-gray-400">Email:</span> {selectedOrder.buyer?.email}</p>
                     <p><span className="text-gray-400">Phone:</span> {selectedOrder.userInfo?.phone}</p>
@@ -268,35 +270,34 @@ const Orders = () => {
                   <p className="text-gray-400 text-sm mb-2">Products</p>
                   <div className="space-y-2">
                     {selectedOrder.products.map((item, idx) => (
-                      <div key={idx} className="bg-gray-700 rounded-lg p-3 flex justify-between">
+                      <div key={idx} className="bg-gray-700 rounded-lg p-3 py-1 flex justify-between">
                         <div>
                           <p className="font-medium">{item.product?.title}</p>
                           <p className="text-sm text-gray-400">Quantity: {item.quantity}</p>
                         </div>
-                        <p className="font-semibold">₹{item.price * item.quantity}</p>
+                        <p className="font-semibold">₹ {item.price * item.quantity}</p>
                       </div>
                     ))}
                   </div>
                 </div>
-
                 <div>
                   <p className="text-gray-400 text-sm mb-2">Payment Summary</p>
                   <div className="bg-gray-700 rounded-lg p-3 space-y-1">
                     <div className="flex justify-between">
                       <span>Product Total:</span>
-                      <span>₹{selectedOrder.productTotal}</span>
+                      <span>₹ {selectedOrder.products[0].price * selectedOrder.products[0].quantity}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Delivery Charge:</span>
-                      <span>₹{selectedOrder.deliveryCharge}</span>
+                      <span>₹ {selectedOrder.deliveryCharge}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Service Charge:</span>
-                      <span>₹{selectedOrder.serviceCharge}</span>
+                      <span>₹ {selectedOrder.serviceCharge}</span>
                     </div>
                     <div className="flex justify-between font-bold pt-2 border-t border-gray-600">
                       <span>Total Amount:</span>
-                      <span>₹{selectedOrder.totalAmount}</span>
+                      <span>₹ {selectedOrder.totalAmount}</span>
                     </div>
                   </div>
                 </div>
@@ -304,7 +305,7 @@ const Orders = () => {
                 <div className="flex gap-3">
                   <button
                     onClick={() => setSelectedOrder(null)}
-                    className="flex-1 bg-gray-600 px-4 py-2 rounded hover:bg-gray-500 transition"
+                    className="flex-1 bg-gray-600 px-4 py-2 rounded hover:bg-gray-500 transition cursor-pointer"
                   >
                     Close
                   </button>
@@ -312,15 +313,13 @@ const Orders = () => {
                     value={selectedOrder.orderStatus}
                     onChange={(e) => updateOrderStatus(selectedOrder._id, e.target.value)}
                     className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer pr-8"
-                    disabled={updatingStatus}
+                    disabled={loading}
                     style={{ cursor: 'pointer' }}
                   >
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="returned">Returned</option>
-                    <option value="canceled">Canceled</option>
+                    <option value=''>{selectedOrder.orderStatus}</option>
+                        {getNextStatuses(selectedOrder.orderStatus).map((status, i) => (
+                          <option key={i} value={status}>{status}</option>
+                        ))}
                   </select>
                 </div>
               </div>

@@ -38,7 +38,6 @@ const UserOrders = () => {
     try {
       setLoading(true)
       const result = await axios.get(`${serverUrl}/order/get-admin-order`, { withCredentials: true })
-      console.log("Admin orders:", result.data.data)
       setOrders(result?.data?.data || [])
       setFilteredOrders(result?.data?.data || [])
       calculateStats(result?.data?.data || [])
@@ -69,22 +68,22 @@ const UserOrders = () => {
 
   const filterOrders = (status, search) => {
     let filtered = [...orders]
-    
+
     // Filter by status
     if (status !== 'all') {
       filtered = filtered.filter(order => order.orderStatus === status)
     }
-    
+
     // Filter by search term (order ID, buyer name, email)
     if (search) {
-      filtered = filtered.filter(order => 
+      filtered = filtered.filter(order =>
         order._id.toLowerCase().includes(search.toLowerCase()) ||
         order.buyer?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
         order.buyer?.email?.toLowerCase().includes(search.toLowerCase()) ||
         order.userInfo?.phone?.toString().includes(search)
       )
     }
-    
+
     setFilteredOrders(filtered)
   }
 
@@ -118,7 +117,7 @@ const UserOrders = () => {
   }
 
   const getStatusColor = (status) => {
-    switch(status) {
+    switch (status) {
       case 'pending': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500'
       case 'confirmed': return 'bg-blue-500/20 text-blue-400 border-blue-500'
       case 'shipped': return 'bg-purple-500/20 text-purple-400 border-purple-500'
@@ -128,17 +127,27 @@ const UserOrders = () => {
       default: return 'bg-gray-500/20 text-gray-400 border-gray-500'
     }
   }
-
+  const allowStatusToUpdate = (status) => {
+    const statusFlow = {
+      pending: ["confirmed", "canceled"],
+      confirmed: ["shipped", "canceled"],
+      shipped: ["delivered", "returned", "canceled"],
+      delivered: ["return"],
+      returned: ["canceled"],
+      canceled: []
+    };
+    return statusFlow[status]
+  }
   useEffect(() => {
     getAllOrders()
   }, [])
 
   return (
-    <div className="h-full overflow-y-scroll scroll-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+    <div className="h-full overflow-y-scroll scroll-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black text-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             Admin Dashboard - Order Management
           </h1>
           <p className="text-gray-400 mt-2">View and manage all customer orders</p>
@@ -188,21 +197,19 @@ const UserOrders = () => {
         </div>
 
         {/* Status Filter Buttons */}
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="flex flex-wrap gap-3 mb-8 justify-center">
           {statusButtons.map((btn) => (
             <button
               key={btn.value}
               onClick={() => handleStatusClick(btn.value)}
-              className={`px-6 py-2 rounded-lg font-semibold transition-all duration-300 ${
-                activeStatus === btn.value
+              className={`cursor-pointer px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${activeStatus === btn.value
                   ? `${btn.color} text-white shadow-lg scale-105`
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-              }`}
+                }`}
             >
               {btn.label}
-              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                activeStatus === btn.value ? 'bg-white/20' : 'bg-gray-600'
-              }`}>
+              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${activeStatus === btn.value ? 'bg-white/20' : 'bg-gray-600'
+                }`}>
                 {btn.value === 'all' ? stats.total : stats[btn.value]}
               </span>
             </button>
@@ -236,8 +243,8 @@ const UserOrders = () => {
               </thead>
               <tbody>
                 {filteredOrders.map((order) => (
-                  <tr 
-                    key={order._id} 
+                  <tr
+                    key={order._id}
                     className="border-b border-gray-700 hover:bg-gray-800/50 transition-colors cursor-pointer"
                     onClick={() => setSelectedOrder(order)}
                   >
@@ -267,9 +274,8 @@ const UserOrders = () => {
                       <p className="text-sm">{order.productVendor?.fullName || 'N/A'}</p>
                     </td>
                     <td className="p-4">
-                      <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                        order.paymentMethod === 'cod' ? 'bg-orange-500/20 text-orange-400' : 'bg-purple-500/20 text-purple-400'
-                      }`}>
+                      <span className={`px-2 py-1 rounded text-xs font-semibold ${order.paymentMethod === 'cod' ? 'bg-orange-500/20 text-orange-400' : 'bg-purple-500/20 text-purple-400'
+                        }`}>
                         {order.paymentMethod?.toUpperCase()}
                       </span>
                       <p className="text-xs text-gray-400 mt-1">
@@ -294,12 +300,11 @@ const UserOrders = () => {
                         className="bg-gray-700 border border-gray-600 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
                         style={{ cursor: 'pointer' }}
                       >
-                        <option value="pending">Pending</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="returned">Returned</option>
-                        <option value="canceled">Canceled</option>
+                        <option value="">{order.orderStatus}</option>
+                        {allowStatusToUpdate(order.orderStatus)?.map((s, i) => {
+                          return <option key={i} value={s}>{s}</option>
+
+                        })}
                       </select>
                     </td>
                   </tr>

@@ -36,9 +36,11 @@ const VendorDashboard = () => {
 
 
   return (
-    <div className='flex justify-end h-screen w-screen pt-20'>
-      <Sidebar activePage={activePage} setActivePage={setActivePage}/>
-      <div className='w-[80%]'>
+    <div className='flex justify-end h-screen w-screen pt-20 bg-red-700'>
+      <div className='hidden md:block w-[20%] min-w-60'>
+      <Sidebar />
+      </div>
+      <div className='w-full md:w-4/5'>
       {renderPage()}
       </div>
     </div>
