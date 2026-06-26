@@ -353,13 +353,13 @@ const AdminNavbar = () => {
                             <div className='flex gap-3 pt-2'>
                                 <button
                                     onClick={handleUpdate}
-                                    className='flex-1 py-2 bg-linear-to-r from-blue-600 to-indigo-600 rounded-xl font-medium text-white hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 active:scale-95'
+                                    className='cursor-pointer flex-1 py-2 bg-linear-to-r from-blue-600 to-indigo-600 rounded-xl font-medium text-white hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 active:scale-95'
                                 >
                                     Update Details
                                 </button>
                                 <button
                                     onClick={handleLogOut}
-                                    className='flex-1 py-2 bg-red-600/20 border border-red-600 rounded-xl font-medium text-red-400 hover:bg-red-600/30 transition-all duration-300 flex items-center justify-center gap-2'
+                                    className='cursor-pointer flex-1 py-2 bg-red-600/20 border border-red-600 rounded-xl font-medium text-red-400 hover:bg-red-600/30 transition-all duration-300 flex items-center justify-center gap-2'
                                 >
                                     <MdLogout />
                                     Logout

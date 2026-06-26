@@ -20,7 +20,6 @@ const UserProduct = () => {
   const product = location.state?.product;
   const { serverUrl, userdata, setUserData, cart, setCart, editToCartGlobal } = useContext(userDataContext)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [isWishlisted, setIsWishlisted] = useState(false)
   const [selectedSize, setSelectedSize] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
@@ -36,6 +35,14 @@ const UserProduct = () => {
     setIsAdding(false)
   }
 
+  const handleBuyNow = (product, quantity)=>{
+    if(!userdata) {
+      navigate('/login')
+    }else{
+      navigate('/checkout-page', { state: { product: product, quantity: quantity } })
+    }
+
+  }
   const discount = product?.discount || 0
   const originalPrice = product?.price || 0
   const discountedPrice = originalPrice - (originalPrice * discount / 100)
@@ -43,7 +50,7 @@ const UserProduct = () => {
   const reviewCount = product?.reviews?.length || 1352
 
   return (
-    <div ref={pageRef} className='scroll-hidden text-white h-screen w-full bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-y-auto'>
+    <div ref={pageRef} className='scroll-hidden text-white h-screen w-full bg-linear-to-br from-gray-900 via-gray-800 to-black relative overflow-y-auto'>
       <Navbar />
       
       <div className='container mx-auto px-4 pt-24 pb-12'>
@@ -80,7 +87,7 @@ const UserProduct = () => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
-                  className='bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl p-8 flex items-center justify-center'
+                  className='bg-linear-to-br from-gray-100 to-gray-200 rounded-2xl p-8 flex items-center justify-center'
                 >
                   <img 
                     src={product?.image[currentIndex]} 
@@ -161,14 +168,14 @@ const UserProduct = () => {
                 <div className='flex items-center gap-2'>
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className='w-8 h-8 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors text-xl font-bold'
+                    className='cursor-pointer w-8 h-8 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors text-xl font-bold'
                   >
                     -
                   </button>
                   <span className='w-12 text-center text-xl font-semibold'>{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(product?.stock, quantity + 1))}
-                    className='w-8 h-8 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors text-xl font-bold'
+                    className='cursor-pointer w-8 h-8 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors text-xl font-bold'
                   >
                     +
                   </button>
@@ -184,7 +191,7 @@ const UserProduct = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={handleAddToCart}
                 disabled={isAdding || product?.stock === 0}
-                className='flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 py-3 rounded-xl font-semibold text-white hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+                className='cursor-pointer flex-1 bg-linear-to-r from-blue-600 to-indigo-600 py-3 rounded-xl font-semibold text-white hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
               >
                 {isAdding ? (
                   <>
@@ -199,26 +206,14 @@ const UserProduct = () => {
                 )}
               </motion.button>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsWishlisted(!isWishlisted)}
-                className={`px-6 py-3 rounded-xl border-2 transition-all flex items-center justify-center gap-2 ${
-                  isWishlisted 
-                    ? 'border-red-500 bg-red-500/20 text-red-400' 
-                    : 'border-gray-600 hover:border-red-500 text-gray-400 hover:text-red-400'
-                }`}
-              >
-                {isWishlisted ? <BsHeartFill className='text-xl' /> : <BsHeart className='text-xl' />}
-                Wishlist
-              </motion.button>
             </div>
 
             {/* Buy Now Button */}
             <motion.button
+            onClick={()=>handleBuyNow(product, quantity)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className='w-full bg-gradient-to-r from-green-600 to-emerald-600 py-3 rounded-xl font-semibold text-white hover:shadow-lg transition-all'
+              className='cursor-pointer w-full bg-linear-to-r from-green-600 to-emerald-600 py-3 rounded-xl font-semibold text-white hover:shadow-lg transition-all'
             >
               Buy Now
             </motion.button>
@@ -314,7 +309,7 @@ const UserProduct = () => {
                   transition={{ delay: i * 0.1 }}
                   className='flex items-start gap-3 text-gray-300'
                 >
-                  <FaCheckCircle className='text-green-400 mt-0.5 flex-shrink-0' />
+                  <FaCheckCircle className='text-green-400 mt-0.5' />
                   <span>{item}</span>
                 </motion.li>
               ))}

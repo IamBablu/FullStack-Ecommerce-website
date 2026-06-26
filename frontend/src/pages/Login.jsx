@@ -72,7 +72,7 @@ const Login = () => {
     }, []);
 
     return (
-        <div className='min-h-screen w-full bg-gradient-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center p-4 relative overflow-hidden'>
+        <div className='min-h-screen w-full bg-linear-to-br from-gray-900 via-blue-900 to-black flex items-center justify-center p-4 relative overflow-hidden'>
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
@@ -88,7 +88,7 @@ const Login = () => {
                 </div>
                 <Button 
                     text='Signup' 
-                    bgColor='bg-gradient-to-r from-blue-600 to-indigo-600 text-sm font-semibold px-4 py-1' 
+                    bgColor='bg-linear-to-r from-blue-600 to-indigo-600 text-sm font-semibold px-4 py-1' 
                     onClick={() => navigate("/signup")} 
                 />
             </div>
@@ -99,7 +99,7 @@ const Login = () => {
                 transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
                 className='w-full max-w-md'
             >
-                <div className='bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'>
+                <div className='bg-linear-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-700 overflow-hidden'>
                     {/* Logo and Title Section */}
                     <div className='text-center pt-8 pb-4'>
                         <motion.div
@@ -108,7 +108,7 @@ const Login = () => {
                             transition={{ delay: 0.2, type: "spring" }}
                             className='inline-block'
                         >
-                            <div className='w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg'>
+                            <div className='w-20 h-20 bg-linear-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg'>
                                 <span className='text-3xl font-bold text-white'>MC</span>
                             </div>
                         </motion.div>
@@ -116,7 +116,7 @@ const Login = () => {
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.3 }}
-                            className='text-3xl font-bold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent'
+                            className='text-3xl font-bold bg-linear-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent'
                         >
                             Welcome Back
                         </motion.h1>
@@ -190,7 +190,7 @@ const Login = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-400 transition-colors'
+                                        className='cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-400 transition-colors'
                                     >
                                         {!showPassword ? <FaEye className='text-xl' /> : <FaEyeSlash className='text-xl' />}
                                     </button>
@@ -223,7 +223,7 @@ const Login = () => {
                                 disabled={loading}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className='w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='cursor-pointer w-full py-3 bg-linear-to-r from-blue-600 to-indigo-600 rounded-xl font-semibold text-white hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 {loading ? (
                                     <div className="flex items-center justify-center gap-2">
@@ -231,7 +231,7 @@ const Login = () => {
                                         <span>Logging in...</span>
                                     </div>
                                 ) : (
-                                    <span className='flex items-center justify-center gap-2 cursor-pointer'>
+                                    <span className='flex items-center justify-center gap-2'>
                                         Login <MdLogin className='text-xl' />
                                     </span>
                                 )}

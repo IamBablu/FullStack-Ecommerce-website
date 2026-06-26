@@ -22,7 +22,7 @@ const Dashboard = () => {
       subtitle: 'SMARTPHONES',
       description: "Sleek Design. Powerful Performance. All in One.",
       button: "DISCOVER",
-      gradient: "from-blue-600 to-indigo-600",
+      linear: "from-blue-600 to-indigo-600",
       lightColor: "blue"
     },
     {
@@ -31,7 +31,7 @@ const Dashboard = () => {
       subtitle: "LUXURY COLLECTION",
       description: "Handcrafted Diamond Necklace for Special Evenings",
       button: "EXPLORE",
-      gradient: "from-pink-600 to-rose-600",
+      linear: "from-pink-600 to-rose-600",
       lightColor: "pink"
     },
     {
@@ -40,7 +40,7 @@ const Dashboard = () => {
       subtitle: "MENS FORMAL WEAR",
       description: "Premium Black Suits, Crafted for Every Occasion",
       button: "SHOP NOW",
-      gradient: "from-emerald-600 to-teal-600",
+      linear: "from-emerald-600 to-teal-600",
       lightColor: "emerald"
     }
   ]
@@ -70,10 +70,10 @@ const Dashboard = () => {
 
   const currentSlide = slides[currentIndex]
   const currentCategory = categories.slice(currenCategoryIndex, currenCategoryIndex + 5)
-  const currentCategorySm = categories.slice(currenCategoryIndexSm, currenCategoryIndexSm + 3)
+  const currentCategorySm = categories.slice(currenCategoryIndexSm, currenCategoryIndexSm + 4)
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-black'>
+    <div className='min-h-screen bg-linear-to-br from-gray-900 via-gray-900 to-black'>
       {/* Hero Slider Section */}
       <div className='relative'>
         <AnimatePresence mode="wait">
@@ -97,12 +97,12 @@ const Dashboard = () => {
                 alt="slide" 
                 className='object-cover w-full h-full'
               />
-              <div className='absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent'></div>
-              <div className='absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent'></div>
+              <div className='absolute inset-0 bg-linear-to-r from-black via-black/60 to-transparent'></div>
+              <div className='absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent'></div>
             </motion.div>
 
             {/* Content */}
-            <div className='relative h-full container mx-auto px-4 flex items-center'>
+            <div className='relative h-full container mx-auto px-8 flex items-center'>
               <div className='max-w-2xl'>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
@@ -119,7 +119,7 @@ const Dashboard = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.6 }}
-                  className='text-4xl md:text-7xl lg:text-8xl font-bold text-white mb-4 leading-tight'
+                  className='text-xl md:text-2xl lg:text-4xl font-bold text-white mb-4 leading-tight'
                 >
                   {currentSlide.description}
                 </motion.h1>
@@ -134,12 +134,12 @@ const Dashboard = () => {
                 </motion.p>
                 
                 <motion.button 
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0}}
+                  animate={{ opacity: 1}}
                   transition={{ delay: 0.6, duration: 0.6 }}
                   whileHover={{ scale: 1.05, x: 10 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`group relative overflow-hidden bg-gradient-to-r ${currentSlide.gradient} px-8 py-4 rounded-full font-semibold text-white shadow-2xl transition-all duration-300`}
+                  className={`cursor-pointer group relative overflow-hidden bg-linear-to-r ${currentSlide.linear} px-8 py-4 rounded-full font-semibold text-white shadow-2xl transition-all duration-300`}
                 >
                   <span className='relative z-10 flex items-center gap-2'>
                     {currentSlide.button}
@@ -151,14 +151,14 @@ const Dashboard = () => {
             </div>
 
             {/* Slide Indicators */}
-            <div className='absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20'>
+            <div className='absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 md:gap-6 z-20'>
               {slides.map((_, idx) => (
                 <motion.button
                   key={idx}
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`transition-all duration-300 ${currentIndex === idx ? 'w-12 bg-white' : 'w-3 bg-white/50'} h-3 rounded-full`}
+                  className={`cursor-pointer transition-all duration-300 ${currentIndex === idx ? 'w-12 bg-white' : 'w-3 bg-white/50'} h-3 rounded-full`}
                 />
               ))}
             </div>
@@ -205,9 +205,9 @@ const Dashboard = () => {
       </div>
 
       {/* Categories Section */}
-      <div className='relative py-16 md:py-24 overflow-hidden'>
+      <div className='relative py-6 overflow-hidden'>
         {/* Background Decoration */}
-        <div className='absolute inset-0 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent pointer-events-none'></div>
+        <div className='absolute inset-0 bg-linear-to-b from-transparent via-blue-500/5 to-transparent pointer-events-none'></div>
         
         <div className='container mx-auto px-4'>
           {/* Section Header */}
@@ -216,12 +216,12 @@ const Dashboard = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className='text-center mb-12 md:mb-16'
+            className='text-center mb-6'
           >
             <span className='inline-block px-4 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-400 border border-purple-500/30 mb-4'>
               EXPLORE COLLECTIONS
             </span>
-            <h2 className='text-3xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-400 to-blue-400 bg-clip-text text-transparent'>
+            <h2 className='text-3xl md:text-5xl font-bold bg-linear-to-r from-white via-purple-400 to-blue-400 bg-clip-text text-transparent'>
               Shop by Categories
             </h2>
             <p className='text-gray-400 text-base md:text-lg mt-4 max-w-2xl mx-auto'>
@@ -241,9 +241,9 @@ const Dashboard = () => {
                   transition={{ delay: index * 0.1, duration: 0.4 }}
                   whileHover={{ scale: 1.05, y: -8 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`group relative overflow-hidden bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border ${item.border} hover:shadow-2xl transition-all duration-300`}
+                  className={`group relative overflow-hidden bg-linear-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-2xl p-6 border ${item.border} hover:shadow-2xl transition-all duration-300`}
                 >
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                  <div className={`absolute inset-0 bg-linear-to-br ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                   <div className='relative z-10'>
                     <div className='text-7xl mb-4 group-hover:scale-110 transition-transform duration-300'>
                       {item.icon}
@@ -272,7 +272,7 @@ const Dashboard = () => {
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`group bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-xl p-4 border ${item.border}`}
+                  className={`group bg-linear-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-xl p-4 border ${item.border}`}
                 >
                   <div className='text-4xl mb-2'>
                     {item.icon}
@@ -313,7 +313,7 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Section */}
-      <div className='py-12 md:py-16 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-pink-600/10'>
+      <div className='py-12 md:py-16 bg-linear-to-r from-blue-600/10 via-purple-600/10 to-pink-600/10'>
         <div className='container mx-auto px-4'>
           <div className='grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8'>
             <motion.div 
